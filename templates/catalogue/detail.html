@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ item.seo_title }} | AntiqueTunes{% endblock %}
+{% block meta_description %}{{ item.seo_description }}{% endblock %}
+
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ item.seo_title }}{% endblock %}
+{% block og_description %}{{ item.seo_description }}{% endblock %}
+{% block og_image %}
+  {% if item.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ item.cover_image.url }}
+  {% elif item.preview_image %}{{ request.scheme }}://{{ request.get_host }}{{ item.preview_image.url }}
+  {% else %}{{ block.super }}{% endif %}
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ item.title|escapejs }}",
+  "description": "{{ item.seo_description|escapejs }}",
+  "image": "{% if item.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ item.cover_image.url }}{% endif %}",
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ item.price }}",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ request.build_absolute_uri }}"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Catalogue", "item": "{{ request.scheme }}://{{ request.get_host }}/catalogue/"},
+    {% if breadcrumb_genre %}
+    {"@type": "ListItem", "position": 3, "name": "{{ breadcrumb_genre.name|escapejs }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'catalogue:genre' breadcrumb_genre.slug %}"},
+    {"@type": "ListItem", "position": 4, "name": "{{ item.title|escapejs }}"},
+    {% else %}
+    {"@type": "ListItem", "position": 3, "name": "{{ item.title|escapejs }}"}
+    {% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  {# ── Breadcrumb ── #}
+  <nav aria-label="Breadcrumb" class="mb-8">
+    <ol class="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+      <li><a href="/" class="hover:text-mahogany transition-colors">Home</a></li>
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li><a href="/catalogue/" class="hover:text-mahogany transition-colors">Catalogue</a></li>
+      {% if breadcrumb_genre %}
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li><a href="{% url 'catalogue:genre' breadcrumb_genre.slug %}" class="hover:text-mahogany transition-colors">{{ breadcrumb_genre.name }}</a></li>
+      {% endif %}
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li class="text-mahogany font-semibold" aria-current="page">{{ item.title }}</li>
+    </ol>
+  </nav>
+
+  <div class="lg:grid lg:grid-cols-[380px_1fr] gap-12">
+
+    {# ── Left: cover + preview ── #}
+    <div class="space-y-4">
+      {# Cover image #}
+      {% if item.cover_image %}
+      <div class="rounded-xl overflow-hidden border border-parchment shadow-md">
+        <img src="{{ item.cover_image.url }}"
+             alt="{{ item.title }} — sheet music cover"
+             width="380" height="507"
+             class="w-full h-auto" />
+      </div>
+      {% endif %}
+
+      {# PDF Preview (first page with watermark) #}
+      {% if item.preview_pdf %}
+      <div class="rounded-xl overflow-hidden border border-parchment shadow-sm">
+        <p class="bg-parchment px-4 py-2 text-xs text-mahogany/60 font-semibold uppercase tracking-wide">
+          Preview — First Page
+        </p>
+        <div id="pdf-preview-container" style="min-height:300px;">
+          <canvas id="pdf-canvas" class="w-full"></canvas>
+        </div>
+        <p class="text-center text-xs text-gray-400 py-2 italic">Watermarked preview</p>
+      </div>
+      {% elif item.preview_image %}
+      <div class="rounded-xl overflow-hidden border border-parchment shadow-sm">
+        <p class="bg-parchment px-4 py-2 text-xs text-mahogany/60 font-semibold uppercase tracking-wide">
+          Preview — First Page
+        </p>
+        <img src="{{ item.preview_image.url }}"
+             alt="Preview of {{ item.title }} first page (watermarked)"
+             class="w-full h-auto" />
+      </div>
+      {% endif %}
+
+      {# Audio sample #}
+      {% if item.audio_sample %}
+      <div class="border border-parchment rounded-xl p-4">
+        <p class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Audio Sample</p>
+        <audio controls class="w-full" aria-label="Audio sample for {{ item.title }}">
+          <source src="{{ item.audio_sample.url }}" />
+          Your browser does not support audio playback.
+        </audio>
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Right: metadata + purchase ── #}
+    <div>
+      <h1 class="font-display text-3xl sm:text-4xl text-mahogany mb-2 leading-tight">{{ item.title }}</h1>
+      <p class="text-gray-500 text-lg mb-6">{{ item.composer }}{% if item.year_published %} &mdash; {{ item.year_published }}{% endif %}</p>
+
+      {# Price + CTA #}
+      <div class="bg-cream border border-parchment rounded-xl p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <span class="font-display text-3xl text-mahogany">${{ item.price }}</span>
+          <span class="text-xs text-gray-400 uppercase tracking-wide">Digital PDF Download</span>
+        </div>
+        <form method="post" action="/cart/add/">
+          {% csrf_token %}
+          <input type="hidden" name="item_id" value="{{ item.pk }}" />
+          <button type="submit"
+                  class="w-full bg-mahogany text-cream py-3 rounded-lg font-semibold text-lg
+                         hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+            Add to Cart
+          </button>
+        </form>
+        <p class="text-xs text-gray-400 text-center mt-3">Instant download after purchase</p>
+      </div>
+
+      {# Metadata table #}
+      <dl class="space-y-3 text-sm mb-8">
+        {% if item.lyricist %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Lyricist</dt>
+          <dd class="text-gray-700">{{ item.lyricist }}</dd>
+        </div>
+        {% endif %}
+        {% if item.arranger %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Arranger</dt>
+          <dd class="text-gray-700">{{ item.arranger }}</dd>
+        </div>
+        {% endif %}
+        {% if item.publisher %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Publisher</dt>
+          <dd class="text-gray-700">{{ item.publisher }}</dd>
+        </div>
+        {% endif %}
+        {% if item.year_published %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Year</dt>
+          <dd class="text-gray-700">{{ item.year_published }}</dd>
+        </div>
+        {% endif %}
+        {% if item.page_count %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Pages</dt>
+          <dd class="text-gray-700">{{ item.page_count }}</dd>
+        </div>
+        {% endif %}
+        {% if item.ensemble_type and item.ensemble_type != 'unspecified' %}
+        <div class="flex gap-4">
+          <dt class="w-28 flex-shrink-0 font-semibold text-mahogany/70">Ensemble</dt>
+          <dd class="text-gray-700">{{ item.get_ensemble_type_display }}</dd>
+        </div>
+        {% endif %}
+      </dl>
+
+      {# Instruments — clickable tags #}
+      {% if item.instruments.exists %}
+      <div class="mb-6">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Instruments</h2>
+        <ul class="flex flex-wrap gap-2" role="list">
+          {% for inst in item.instruments.all %}
+          <li>
+            <a href="/instruments/{{ inst.slug }}/"
+               class="px-3 py-1 bg-parchment text-mahogany text-xs rounded-full
+                      hover:bg-mahogany hover:text-cream transition-colors">
+              {{ inst.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {# Genres #}
+      {% if item.genres.exists %}
+      <div class="mb-6">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Genre</h2>
+        <ul class="flex flex-wrap gap-2" role="list">
+          {% for g in item.genres.all %}
+          <li>
+            <a href="{% url 'catalogue:genre' g.slug %}"
+               class="px-3 py-1 bg-parchment text-mahogany text-xs rounded-full
+                      hover:bg-mahogany hover:text-cream transition-colors">
+              {{ g.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {# Description #}
+      {% if item.description %}
+      <div class="mb-6">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">About this piece</h2>
+        <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed">
+          {{ item.description|linebreaksbr }}
+        </div>
+      </div>
+      {% endif %}
+
+      {# Condition notes #}
+      {% if item.condition_notes %}
+      <div class="bg-parchment/50 border border-parchment rounded-lg p-4 text-sm text-gray-600">
+        <h2 class="font-semibold text-mahogany/70 mb-1">Scan Notes</h2>
+        <p>{{ item.condition_notes }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  {# ── Related items ── #}
+  {% if related %}
+  <section class="mt-16 pt-12 border-t border-parchment" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="font-display text-2xl text-mahogany mb-6">You Might Also Like</h2>
+    <ul class="grid grid-cols-2 sm:grid-cols-4 gap-5" role="list">
+      {% for rel in related %}
+      {% include 'partials/item_card.html' with item=rel %}
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if item.preview_pdf %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-q+4lRwSCOWNjYR3rJWE3eLfxENRHJWfMQlEMzjzlh5hUiulEOuCiTWi5Eb1k/IcBCLbK3J5SXIL6AMfKFiAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  (async function () {
+    const pdfUrl = '{{ item.preview_pdf.url }}';
+    try {
+      const loadingTask = pdfjsLib.getDocument(pdfUrl);
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+
+      const container = document.getElementById('pdf-preview-container');
+      const scale = container.clientWidth / page.getViewport({ scale: 1 }).width;
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.getElementById('pdf-canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    } catch (e) {
+      // PDF.js failed — fall back to the preview image if available
+      document.getElementById('pdf-preview-container').style.display = 'none';
+    }
+  })();
+</script>
+{% endif %}
+{% endblock %}

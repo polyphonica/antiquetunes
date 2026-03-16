@@ -1,0 +1,108 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+  {# ── Top bar ── #}
+  <div class="flex items-center justify-between py-4">
+
+    {# Logo #}
+    <a href="/" class="flex items-center gap-3 group" aria-label="AntiqueTunes — Home">
+      <span class="font-display text-2xl sm:text-3xl text-gold tracking-wide group-hover:text-gold-light transition-colors">
+        AntiqueTunes
+      </span>
+      <span class="hidden sm:block text-cream/50 text-sm font-body italic border-l border-gold/30 pl-3">
+        Rare Sheet Music
+      </span>
+    </a>
+
+    {# Search bar (desktop) #}
+    <form action="/search/" method="get" role="search"
+          class="hidden md:flex flex-1 max-w-md mx-6">
+      <label for="header-search" class="sr-only">Search sheet music</label>
+      <div class="relative w-full">
+        <input id="header-search"
+               type="search"
+               name="q"
+               value="{{ request.GET.q }}"
+               placeholder="Search by title, composer, instrument…"
+               autocomplete="off"
+               class="w-full bg-mahogany-light border border-gold/30 text-cream placeholder:text-cream/40
+                      rounded-l px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+        <button type="submit"
+                class="bg-gold text-mahogany px-4 py-2 rounded-r text-sm font-semibold
+                       hover:bg-gold-light transition-colors"
+                aria-label="Search">
+          Search
+        </button>
+      </div>
+    </form>
+
+    {# Nav actions #}
+    <nav aria-label="Account navigation" class="flex items-center gap-4 text-sm">
+      {% if user.is_authenticated %}
+        <a href="/account/orders/" class="text-cream/80 hover:text-gold transition-colors hidden sm:block">My Orders</a>
+        <a href="/account/downloads/" class="text-cream/80 hover:text-gold transition-colors hidden sm:block">Downloads</a>
+        <a href="/account/logout/" class="text-cream/60 hover:text-cream transition-colors">Logout</a>
+      {% else %}
+        <a href="/account/login/" class="text-cream/80 hover:text-gold transition-colors">Login</a>
+        <a href="/account/register/"
+           class="bg-gold text-mahogany px-3 py-1.5 rounded text-sm font-semibold hover:bg-gold-light transition-colors">
+          Register
+        </a>
+      {% endif %}
+      <a href="/cart/"
+         class="relative text-cream hover:text-gold transition-colors"
+         aria-label="Shopping cart">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 7h12.8M7 13H5.4M17 21a2 2 0 100-4 2 2 0 000 4zm-10 0a2 2 0 100-4 2 2 0 000 4z"/>
+        </svg>
+      </a>
+    </nav>
+  </div>
+
+  {# ── Primary nav ── #}
+  <nav aria-label="Main navigation" class="border-t border-gold/20 py-2">
+    <ul class="flex flex-wrap gap-1 text-sm font-body">
+      <li>
+        <a href="/catalogue/"
+           class="px-3 py-1.5 rounded text-cream/80 hover:text-gold hover:bg-mahogany-light transition-colors
+                  {% if request.path == '/catalogue/' %}text-gold font-semibold{% endif %}"
+           {% if request.path == '/catalogue/' %}aria-current="page"{% endif %}>
+          All Music
+        </a>
+      </li>
+      {% for genre in nav_genres %}
+      <li>
+        <a href="{% url 'catalogue:genre' genre.slug %}"
+           class="px-3 py-1.5 rounded text-cream/80 hover:text-gold hover:bg-mahogany-light transition-colors">
+          {{ genre.name }}
+        </a>
+      </li>
+      {% endfor %}
+      <li>
+        <a href="/instruments/"
+           class="px-3 py-1.5 rounded text-cream/80 hover:text-gold hover:bg-mahogany-light transition-colors">
+          By Instrument
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  {# ── Mobile search ── #}
+  <form action="/search/" method="get" role="search" class="md:hidden pb-3">
+    <label for="mobile-search" class="sr-only">Search sheet music</label>
+    <div class="flex">
+      <input id="mobile-search"
+             type="search" name="q"
+             value="{{ request.GET.q }}"
+             placeholder="Search…"
+             class="flex-1 bg-mahogany-light border border-gold/30 text-cream placeholder:text-cream/40
+                    rounded-l px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+      <button type="submit"
+              class="bg-gold text-mahogany px-4 py-2 rounded-r text-sm font-semibold"
+              aria-label="Search">
+        Go
+      </button>
+    </div>
+  </form>
+
+</div>

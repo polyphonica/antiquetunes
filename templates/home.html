@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block structured_data %}
+{{ block.super }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AntiqueTunes",
+  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "description": "Rare early 20th century sheet music — digitised originals."
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+{# ── Hero ── #}
+<section class="relative bg-mahogany overflow-hidden" aria-labelledby="hero-heading">
+  <div class="absolute inset-0 opacity-10"
+       style="background-image: repeating-linear-gradient(45deg, #c9a84c 0, #c9a84c 1px, transparent 0, transparent 50%); background-size: 12px 12px;">
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+    <p class="text-gold/70 text-sm font-body uppercase tracking-widest mb-4">Est. Early 20th Century</p>
+    <h1 id="hero-heading" class="font-display text-4xl sm:text-5xl lg:text-6xl text-gold leading-tight mb-6">
+      Rare Sheet Music<br class="hidden sm:block" />
+      <span class="italic text-cream">from the Golden Age</span>
+    </h1>
+    <p class="text-cream/70 text-lg sm:text-xl max-w-2xl mx-auto mb-10">
+      Digitised originals from the early 20th century — Ragtime, Jazz, Blues,
+      Tin Pan Alley, Marches and more. Beautifully preserved and available to download instantly.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/catalogue/"
+         class="bg-gold text-mahogany px-8 py-3 rounded font-semibold text-lg hover:bg-gold-light transition-colors">
+        Browse the Collection
+      </a>
+      <a href="/instruments/"
+         class="border border-gold/50 text-gold px-8 py-3 rounded font-semibold text-lg hover:border-gold hover:text-gold-light transition-colors">
+        Browse by Instrument
+      </a>
+    </div>
+  </div>
+</section>
+
+{# ── Browse by decade ── #}
+<section class="bg-cream-dark border-b border-parchment" aria-label="Browse by decade">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-sm text-mahogany/60 font-semibold uppercase tracking-wide mr-2">Decade:</span>
+      {% for decade in decades %}
+      <a href="/catalogue/?decade={{ decade }}"
+         class="px-4 py-1.5 border border-parchment rounded-full text-sm font-body text-mahogany
+                hover:bg-mahogany hover:text-cream hover:border-mahogany transition-colors">
+        {{ decade }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ── Featured items ── #}
+{% if featured %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="featured-heading">
+  <div class="flex items-baseline justify-between mb-8">
+    <h2 id="featured-heading" class="font-display text-3xl text-mahogany">Featured Pieces</h2>
+    <a href="/catalogue/" class="text-sm text-gold hover:text-gold-dark transition-colors font-semibold">
+      View all &rarr;
+    </a>
+  </div>
+  <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6" role="list">
+    {% for item in featured %}
+    {% include 'partials/item_card.html' with item=item %}
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{# ── Browse by genre ── #}
+{% if genres %}
+<section class="bg-cream-dark py-16" aria-labelledby="genres-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 id="genres-heading" class="font-display text-3xl text-mahogany mb-8">Browse by Genre</h2>
+    <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" role="list">
+      {% for genre in genres %}
+      <li>
+        <a href="{% url 'catalogue:genre' genre.slug %}"
+           class="block bg-cream border border-parchment rounded-lg p-5 text-center
+                  hover:border-gold hover:shadow-md transition-all group">
+          <span class="font-display text-lg text-mahogany group-hover:text-mahogany-light block">
+            {{ genre.name }}
+          </span>
+          {% if genre.description %}
+          <span class="text-xs text-gray-500 mt-1 block line-clamp-2">{{ genre.description }}</span>
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{# ── Browse by instrument family ── #}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="instruments-heading">
+  <div class="flex items-baseline justify-between mb-8">
+    <h2 id="instruments-heading" class="font-display text-3xl text-mahogany">Browse by Instrument</h2>
+    <a href="/instruments/" class="text-sm text-gold hover:text-gold-dark font-semibold">See all &rarr;</a>
+  </div>
+  <ul class="flex flex-wrap gap-3" role="list">
+    {% for value, label in instrument_families %}
+    <li>
+      <a href="/catalogue/?instrument_family={{ value }}"
+         class="px-5 py-2 bg-cream border border-parchment rounded-full font-body text-sm text-mahogany
+                hover:bg-mahogany hover:text-cream hover:border-mahogany transition-colors">
+        {{ label }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+{# ── Recently added ── #}
+{% if recent %}
+<section class="bg-cream-dark py-16" aria-labelledby="recent-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-baseline justify-between mb-8">
+      <h2 id="recent-heading" class="font-display text-3xl text-mahogany">Recently Added</h2>
+      <a href="/catalogue/?sort=-created_at" class="text-sm text-gold hover:text-gold-dark font-semibold">
+        View all &rarr;
+      </a>
+    </div>
+    <ul class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4" role="list">
+      {% for item in recent %}
+      {% include 'partials/item_card.html' with item=item compact=True %}
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

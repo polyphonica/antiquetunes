@@ -1,0 +1,46 @@
+{% load static %}
+<li class="{% if compact %}{% else %}col-span-1{% endif %}">
+  <article class="bg-cream border border-parchment rounded-lg overflow-hidden hover:shadow-lg hover:border-gold transition-all group h-full flex flex-col">
+    <a href="{{ item.get_absolute_url }}" class="block aspect-[3/4] overflow-hidden bg-parchment/50" tabindex="-1" aria-hidden="true">
+      {% if item.cover_image %}
+        <img src="{{ item.cover_image.url }}"
+             alt="{{ item.title }} — sheet music cover"
+             loading="lazy"
+             width="300" height="400"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      {% elif item.preview_image %}
+        <img src="{{ item.preview_image.url }}"
+             alt="{{ item.title }} — sheet music cover"
+             loading="lazy"
+             width="300" height="400"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-parchment">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-mahogany/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+      {% endif %}
+    </a>
+
+    <div class="p-3 flex flex-col flex-1">
+      <h3 class="font-display text-sm text-mahogany leading-tight mb-0.5 line-clamp-2">
+        <a href="{{ item.get_absolute_url }}"
+           class="hover:text-mahogany-light focus:outline-none focus:underline">
+          {{ item.title }}
+        </a>
+      </h3>
+      <p class="text-xs text-gray-500 mb-2 line-clamp-1">{{ item.composer }}{% if item.year_published %}, {{ item.year_published }}{% endif %}</p>
+
+      <div class="mt-auto flex items-center justify-between gap-2">
+        <span class="font-semibold text-mahogany text-sm">${{ item.price }}</span>
+        <a href="{{ item.get_absolute_url }}"
+           class="text-xs bg-gold text-mahogany px-2.5 py-1 rounded font-semibold
+                  hover:bg-gold-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold"
+           aria-label="View {{ item.title }}">
+          View
+        </a>
+      </div>
+    </div>
+  </article>
+</li>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <h1 class="font-display text-3xl text-mahogany mb-2">
+    {% if query %}Search results for &ldquo;{{ query }}&rdquo;{% else %}Search Sheet Music{% endif %}
+  </h1>
+  <p class="text-gray-500 text-sm mb-8">
+    {{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }} found
+  </p>
+
+  {# Search form #}
+  <form method="get" action="" role="search" class="mb-8">
+    <div class="flex max-w-xl">
+      <label for="q" class="sr-only">Search</label>
+      <input id="q" type="search" name="q" value="{{ query }}"
+             placeholder="Title, composer, instrument…"
+             autofocus
+             class="flex-1 border border-parchment rounded-l px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-cream" />
+      <button type="submit"
+              class="bg-mahogany text-cream px-6 py-2.5 rounded-r text-sm font-semibold
+                     hover:bg-mahogany-light transition-colors">
+        Search
+      </button>
+    </div>
+  </form>
+
+  {% if page_obj.object_list %}
+  <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5" role="list">
+    {% for item in page_obj %}
+    {% include 'partials/item_card.html' with item=item %}
+    {% endfor %}
+  </ul>
+  {% include 'partials/pagination.html' %}
+  {% elif query %}
+  <div class="text-center py-20">
+    <p class="font-display text-2xl text-mahogany/40 mb-3">No results for &ldquo;{{ query }}&rdquo;</p>
+    <p class="text-gray-500 text-sm mb-6">
+      Try different keywords or <a href="/catalogue/" class="text-gold hover:underline">browse all sheet music</a>.
+    </p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

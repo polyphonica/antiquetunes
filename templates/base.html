@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  {# ── SEO: title ── #}
+  <title>{% block title %}{% if seo_title %}{{ seo_title }} | AntiqueTunes{% else %}AntiqueTunes — Rare Early 20th Century Sheet Music{% endif %}{% endblock %}</title>
+
+  {# ── SEO: meta ── #}
+  <meta name="description" content="{% block meta_description %}{% if seo_description %}{{ seo_description }}{% else %}Discover digitised originals from the golden age of popular music — Ragtime, Jazz, Blues, Tin Pan Alley and more.{% endif %}{% endblock %}" />
+  {% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}" />{% endblock %}
+
+  {# ── Open Graph ── #}
+  <meta property="og:site_name" content="AntiqueTunes" />
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
+  <meta property="og:title" content="{% block og_title %}{% if seo_title %}{{ seo_title }}{% else %}AntiqueTunes{% endif %}{% endblock %}" />
+  <meta property="og:description" content="{% block og_description %}{% if seo_description %}{{ seo_description }}{% else %}Rare early 20th century sheet music.{% endif %}{% endblock %}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  <meta property="og:image" content="{% block og_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}{% endblock %}" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  {# ── Structured data ── #}
+  {% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AntiqueTunes",
+    "url": "{{ request.scheme }}://{{ request.get_host }}",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/search/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  {% endblock %}
+
+  {# ── Fonts ── #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  {# ── Tailwind CSS (CDN for development) ── #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mahogany: { DEFAULT: '#4a1c0d', light: '#6b2d12', dark: '#2e1008' },
+            gold:     { DEFAULT: '#c9a84c', light: '#dfc078', dark: '#a07c2a' },
+            cream:    { DEFAULT: '#faf6ee', dark: '#f0e8d8' },
+            parchment: '#e8dcc8',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  {# ── Site stylesheet ── #}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-cream font-body text-gray-800 min-h-screen flex flex-col">
+
+  {# ── Skip link (accessibility) ── #}
+  <a href="#main-content"
+     class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50
+            focus:bg-gold focus:text-mahogany focus:px-4 focus:py-2 focus:rounded font-semibold">
+    Skip to main content
+  </a>
+
+  {# ── Header ── #}
+  <header class="bg-mahogany text-cream shadow-lg" role="banner">
+    {% include 'partials/header.html' %}
+  </header>
+
+  {# ── Flash messages ── #}
+  {% if messages %}
+  <div aria-live="polite" aria-atomic="true" class="fixed top-4 right-4 z-50 space-y-2">
+    {% for message in messages %}
+    <div role="alert"
+         class="px-5 py-3 rounded shadow-lg text-sm font-medium
+                {% if message.tags == 'error' %}bg-red-600 text-white
+                {% elif message.tags == 'success' %}bg-green-700 text-white
+                {% else %}bg-gold text-mahogany{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ── Main content ── #}
+  <main id="main-content" class="flex-1" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ── Footer ── #}
+  <footer class="bg-mahogany-dark text-cream/80 mt-16" role="contentinfo">
+    {% include 'partials/footer.html' %}
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

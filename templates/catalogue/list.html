@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  {# ── Breadcrumb ── #}
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-2 text-sm text-gray-500" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" class="hover:text-mahogany transition-colors">
+          <span itemprop="name">Home</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      {% if active_genre %}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/catalogue/" itemprop="item" class="hover:text-mahogany transition-colors">
+          <span itemprop="name">Catalogue</span>
+        </a>
+        <meta itemprop="position" content="2" />
+      </li>
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-mahogany font-semibold">{{ active_genre.name }}</span>
+        <meta itemprop="position" content="3" />
+      </li>
+      {% elif active_instrument %}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/instruments/" itemprop="item" class="hover:text-mahogany transition-colors">
+          <span itemprop="name">By Instrument</span>
+        </a>
+        <meta itemprop="position" content="2" />
+      </li>
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-mahogany font-semibold">{{ active_instrument.name }}</span>
+        <meta itemprop="position" content="3" />
+      </li>
+      {% else %}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-mahogany font-semibold">Catalogue</span>
+        <meta itemprop="position" content="2" />
+      </li>
+      {% endif %}
+    </ol>
+  </nav>
+
+  <div class="lg:grid lg:grid-cols-[240px_1fr] gap-8">
+
+    {# ── Filters sidebar ── #}
+    <aside aria-label="Filter music" class="mb-6 lg:mb-0">
+      <form method="get" id="filter-form">
+
+        <div class="bg-cream border border-parchment rounded-lg p-5 space-y-6">
+          <h2 class="font-display text-lg text-mahogany">Filters</h2>
+
+          {# Genre #}
+          {% if genres %}
+          <fieldset>
+            <legend class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Genre</legend>
+            <div class="space-y-1 max-h-48 overflow-y-auto pr-1">
+              {% for g in genres %}
+              <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-mahogany">
+                <input type="radio" name="genre" value="{{ g.slug }}"
+                       {% if params.genre == g.slug %}checked{% endif %}
+                       class="accent-mahogany" />
+                {{ g.name }}
+              </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+          {% endif %}
+
+          {# Decade #}
+          <fieldset>
+            <legend class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Decade</legend>
+            <div class="space-y-1">
+              {% for decade in decades %}
+              <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-mahogany">
+                <input type="radio" name="decade" value="{{ decade }}"
+                       {% if params.decade == decade %}checked{% endif %}
+                       class="accent-mahogany" />
+                {{ decade }}
+              </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+
+          {# Instrument #}
+          {% if instruments %}
+          <fieldset>
+            <legend class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Instrument</legend>
+            <div class="space-y-1 max-h-48 overflow-y-auto pr-1">
+              {% for inst in instruments %}
+              <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-mahogany">
+                <input type="radio" name="instrument" value="{{ inst.slug }}"
+                       {% if params.instrument == inst.slug %}checked{% endif %}
+                       class="accent-mahogany" />
+                {{ inst.name }}
+              </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+          {% endif %}
+
+          {# Price range #}
+          <fieldset>
+            <legend class="text-xs font-semibold uppercase tracking-wide text-mahogany/60 mb-2">Price (USD)</legend>
+            <div class="flex items-center gap-2 text-sm">
+              <label for="price_min" class="sr-only">Minimum price</label>
+              <input id="price_min" type="number" name="price_min" min="0" step="0.50"
+                     value="{{ params.price_min }}"
+                     placeholder="Min"
+                     class="w-full border border-parchment rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+              <span class="text-gray-400">–</span>
+              <label for="price_max" class="sr-only">Maximum price</label>
+              <input id="price_max" type="number" name="price_max" min="0" step="0.50"
+                     value="{{ params.price_max }}"
+                     placeholder="Max"
+                     class="w-full border border-parchment rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+            </div>
+          </fieldset>
+
+          <div class="flex gap-2">
+            <button type="submit"
+                    class="flex-1 bg-mahogany text-cream py-2 rounded text-sm font-semibold
+                           hover:bg-mahogany-light transition-colors">
+              Apply
+            </button>
+            <a href="{{ request.path }}"
+               class="px-3 py-2 border border-parchment rounded text-sm text-gray-500
+                      hover:bg-cream-dark transition-colors">
+              Clear
+            </a>
+          </div>
+        </div>
+
+        {# Sort (hidden in sidebar, shown in toolbar) #}
+        <input type="hidden" name="sort" id="sort-input" value="{{ params.sort|default:'-created_at' }}" />
+      </form>
+    </aside>
+
+    {# ── Results ── #}
+    <div>
+      {# Toolbar #}
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <p class="text-sm text-gray-500">
+          <strong class="text-mahogany">{{ page_obj.paginator.count }}</strong> item{{ page_obj.paginator.count|pluralize }} found
+        </p>
+        <label for="sort-select" class="flex items-center gap-2 text-sm text-gray-600">
+          Sort:
+          <select id="sort-select"
+                  onchange="document.getElementById('sort-input').value=this.value; document.getElementById('filter-form').submit();"
+                  class="border border-parchment rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-cream">
+            <option value="-created_at" {% if params.sort == '-created_at' or not params.sort %}selected{% endif %}>Newest</option>
+            <option value="title"       {% if params.sort == 'title' %}selected{% endif %}>Title A–Z</option>
+            <option value="-title"      {% if params.sort == '-title' %}selected{% endif %}>Title Z–A</option>
+            <option value="year"        {% if params.sort == 'year' %}selected{% endif %}>Year (Oldest)</option>
+            <option value="-year"       {% if params.sort == '-year' %}selected{% endif %}>Year (Newest)</option>
+            <option value="price"       {% if params.sort == 'price' %}selected{% endif %}>Price Low–High</option>
+            <option value="-price"      {% if params.sort == '-price' %}selected{% endif %}>Price High–Low</option>
+          </select>
+        </label>
+      </div>
+
+      {% if page_obj.object_list %}
+      <ul class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5" role="list">
+        {% for item in page_obj %}
+        {% include 'partials/item_card.html' with item=item %}
+        {% endfor %}
+      </ul>
+      {% include 'partials/pagination.html' %}
+      {% else %}
+      <div class="text-center py-20">
+        <p class="font-display text-2xl text-mahogany/40 mb-3">No results found</p>
+        <p class="text-gray-500 text-sm mb-6">Try adjusting your filters or <a href="/catalogue/" class="text-gold hover:underline">browse all music</a>.</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

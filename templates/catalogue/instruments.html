@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <nav aria-label="Breadcrumb" class="mb-6">
+    <ol class="flex items-center gap-2 text-sm text-gray-500">
+      <li><a href="/" class="hover:text-mahogany transition-colors">Home</a></li>
+      <li aria-hidden="true"><span class="text-parchment">/</span></li>
+      <li class="text-mahogany font-semibold" aria-current="page">Browse by Instrument</li>
+    </ol>
+  </nav>
+
+  <h1 class="font-display text-3xl text-mahogany mb-10">Browse by Instrument</h1>
+
+  {% for family, instruments in grouped_instruments.items %}
+  <section class="mb-10" aria-labelledby="family-{{ forloop.counter }}">
+    <h2 id="family-{{ forloop.counter }}" class="font-display text-xl text-mahogany border-b border-parchment pb-2 mb-4">
+      {{ family }}
+    </h2>
+    <ul class="flex flex-wrap gap-3" role="list">
+      {% for inst in instruments %}
+      <li>
+        <a href="/instruments/{{ inst.slug }}/"
+           class="px-4 py-2 bg-cream border border-parchment rounded-full text-sm text-mahogany
+                  hover:bg-mahogany hover:text-cream hover:border-mahogany transition-colors">
+          {{ inst.name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% empty %}
+  <p class="text-gray-500">No instruments listed yet.</p>
+  {% endfor %}
+
+</div>
+{% endblock %}

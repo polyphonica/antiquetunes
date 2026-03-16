@@ -1,0 +1,48 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+    {# Brand column #}
+    <div>
+      <p class="font-display text-xl text-gold mb-3">AntiqueTunes</p>
+      <p class="text-sm text-cream/60 leading-relaxed">
+        Digitised originals from the golden age of popular music.
+        Rare sheet music from the early 20th century, beautifully preserved.
+      </p>
+    </div>
+
+    {# Browse column #}
+    <nav aria-label="Browse navigation">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-gold/70 mb-3">Browse</h2>
+      <ul class="space-y-2 text-sm text-cream/70">
+        <li><a href="/catalogue/" class="hover:text-gold transition-colors">All Sheet Music</a></li>
+        <li><a href="/instruments/" class="hover:text-gold transition-colors">By Instrument</a></li>
+        {% for genre in nav_genres %}
+        <li><a href="{% url 'catalogue:genre' genre.slug %}" class="hover:text-gold transition-colors">{{ genre.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    {# Account column #}
+    <nav aria-label="Account navigation">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-gold/70 mb-3">Account</h2>
+      <ul class="space-y-2 text-sm text-cream/70">
+        {% if user.is_authenticated %}
+          <li><a href="/account/orders/" class="hover:text-gold transition-colors">My Orders</a></li>
+          <li><a href="/account/downloads/" class="hover:text-gold transition-colors">My Downloads</a></li>
+          <li><a href="/account/logout/" class="hover:text-gold transition-colors">Logout</a></li>
+        {% else %}
+          <li><a href="/account/login/" class="hover:text-gold transition-colors">Login</a></li>
+          <li><a href="/account/register/" class="hover:text-gold transition-colors">Register</a></li>
+        {% endif %}
+        <li><a href="/about/" class="hover:text-gold transition-colors">About</a></li>
+        <li><a href="/contact/" class="hover:text-gold transition-colors">Contact</a></li>
+      </ul>
+    </nav>
+
+  </div>
+
+  <div class="mt-10 pt-6 border-t border-gold/20 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-cream/40">
+    <p>&copy; {% now "Y" %} AntiqueTunes. All rights reserved.</p>
+    <p>Rare sheet music from the early 20th century.</p>
+  </div>
+</div>

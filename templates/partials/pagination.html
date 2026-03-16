@@ -1,0 +1,46 @@
+{% if page_obj.has_other_pages %}
+<nav aria-label="Pagination" class="mt-10 flex justify-center">
+  <ul class="flex items-center gap-1 flex-wrap">
+
+    {% if page_obj.has_previous %}
+    <li>
+      <a href="?{% if params %}{{ params.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}"
+         class="px-3 py-2 text-sm border border-parchment rounded hover:bg-mahogany hover:text-cream transition-colors"
+         rel="prev" aria-label="Previous page">
+        &larr; Prev
+      </a>
+    </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+      <li>
+        <span class="px-3 py-2 text-sm bg-mahogany text-cream rounded font-semibold"
+              aria-current="page" aria-label="Page {{ num }}, current page">
+          {{ num }}
+        </span>
+      </li>
+      {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+      <li>
+        <a href="?{% if params %}{{ params.urlencode }}&{% endif %}page={{ num }}"
+           class="px-3 py-2 text-sm border border-parchment rounded hover:bg-mahogany hover:text-cream transition-colors"
+           aria-label="Page {{ num }}">
+          {{ num }}
+        </a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li>
+      <a href="?{% if params %}{{ params.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}"
+         class="px-3 py-2 text-sm border border-parchment rounded hover:bg-mahogany hover:text-cream transition-colors"
+         rel="next" aria-label="Next page">
+        Next &rarr;
+      </a>
+    </li>
+    {% endif %}
+
+  </ul>
+</nav>
+{% endif %}
