@@ -3,7 +3,7 @@ import environ
 
 env = environ.Env()
 
-DEBUG = False
+DEBUG = env.bool('DEBUG', default=False)
 
 DATABASES = {
     'default': env.db('DATABASE_URL')
