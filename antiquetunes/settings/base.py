@@ -85,8 +85,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-PROTECTED_MEDIA_ROOT = BASE_DIR / 'protected_media'
+MEDIA_ROOT = env.path('MEDIA_ROOT', default=str(BASE_DIR / 'media'))()
+PROTECTED_MEDIA_ROOT = env.path('PROTECTED_MEDIA_ROOT', default=str(BASE_DIR / 'protected_media'))()
 
 # Email
 EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
