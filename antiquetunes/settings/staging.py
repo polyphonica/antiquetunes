@@ -5,6 +5,8 @@ env = environ.Env()
 
 DEBUG = env.bool('DEBUG', default=False)
 
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=['http://82.165.193.247:8006'])
+
 DATABASES = {
     'default': env.db('DATABASE_URL')
 }
