@@ -26,6 +26,9 @@ urlpatterns = [
     path('instruments/', catalogue_views.instruments_browse, name='instruments'),
     path('instruments/<slug:instrument_slug>/', catalogue_views.instrument_list, name='instrument'),
 
+    # Accounts
+    path('account/', include('apps.accounts.urls', namespace='accounts')),
+
     # Catalogue
     path('catalogue/', include('apps.catalogue.urls', namespace='catalogue')),
 

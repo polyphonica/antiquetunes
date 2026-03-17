@@ -62,6 +62,8 @@ WSGI_APPLICATION = 'antiquetunes.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.Customer'
 AUTHENTICATION_BACKENDS = ['apps.accounts.backends.EmailBackend']
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
