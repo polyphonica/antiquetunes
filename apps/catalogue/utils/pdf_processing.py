@@ -66,7 +66,7 @@ def generate_watermarked_preview(pdf_path: str, slug: str) -> ContentFile | None
             pdf_path,
             first_page=1,
             last_page=1,
-            dpi=120,
+            dpi=150,
         )
     except Exception:
         return None
@@ -82,11 +82,20 @@ def generate_watermarked_preview(pdf_path: str, slug: str) -> ContentFile | None
     draw = ImageDraw.Draw(watermark)
 
     text = 'PREVIEW — ANTIQUETUNES.COM'
-    font_size = max(40, w // 14)
+    font_size = max(60, w // 10)
 
-    try:
-        font = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Bold.ttf', font_size)
-    except (IOError, OSError):
+    font = None
+    for font_path in [
+        '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+        '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+        '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
+    ]:
+        try:
+            font = ImageFont.truetype(font_path, font_size)
+            break
+        except (IOError, OSError):
+            continue
+    if font is None:
         font = ImageFont.load_default()
 
     # Measure text
@@ -95,13 +104,12 @@ def generate_watermarked_preview(pdf_path: str, slug: str) -> ContentFile | None
     text_h = bbox[3] - bbox[1]
 
     # Place at centre, diagonal
-    import math
     angle = 30
     x = (w - text_w) / 2
     y = (h - text_h) / 2
 
     # Draw semi-transparent text
-    draw.text((x, y), text, font=font, fill=(180, 0, 0, 90))
+    draw.text((x, y), text, font=font, fill=(180, 0, 0, 170))
 
     # Rotate watermark
     watermark = watermark.rotate(angle, expand=False)
@@ -109,6 +117,6 @@ def generate_watermarked_preview(pdf_path: str, slug: str) -> ContentFile | None
 
     # Save as PDF via Pillow
     buf = io.BytesIO()
-    img.save(buf, format='PDF', resolution=100)
+    img.save(buf, format='PDF', resolution=150)
     buf.seek(0)
     return ContentFile(buf.read())
