@@ -207,12 +207,15 @@ class SheetMusic(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
+        from django.conf import settings
         primary_genre = self.genres.first()
         genre_slug = primary_genre.slug if primary_genre else 'uncategorised'
-        return reverse('catalogue:detail', kwargs={
+        path = reverse('catalogue:detail', kwargs={
             'genre_slug': genre_slug,
             'slug': self.slug,
         })
+        site_url = getattr(settings, 'SITE_URL', '').rstrip('/')
+        return f'{site_url}{path}' if site_url else path
 
     @property
     def seo_title(self):
