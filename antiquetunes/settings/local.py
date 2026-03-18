@@ -15,7 +15,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Allow all hosts locally
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
-# Disable password hashing for faster tests
-PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
-
 INTERNAL_IPS = ['127.0.0.1']
