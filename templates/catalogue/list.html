@@ -125,11 +125,13 @@
 
           <div class="flex gap-2">
             <button type="submit"
+                    aria-label="Apply filters"
                     class="flex-1 bg-mahogany text-cream py-2 rounded text-sm font-semibold
                            hover:bg-mahogany-light transition-colors">
               Apply
             </button>
             <a href="{{ request.path }}"
+               aria-label="Clear all filters"
                class="px-3 py-2 border border-parchment rounded text-sm text-gray-500
                       hover:bg-cream-dark transition-colors">
               Clear

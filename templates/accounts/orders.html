@@ -17,7 +17,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 bg-parchment/40 border-b border-parchment">
           <div>
             <span class="font-semibold text-mahogany text-sm">{{ order.order_reference }}</span>
-            <span class="text-gray-400 text-xs ml-3">{{ order.created_at|date:"F j, Y" }}</span>
+            <span class="text-gray-500 text-xs ml-3">{{ order.created_at|date:"F j, Y" }}</span>
           </div>
           <div class="flex items-center gap-4">
             <span class="font-display text-mahogany">${{ order.total }}</span>
