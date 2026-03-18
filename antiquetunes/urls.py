@@ -32,6 +32,9 @@ urlpatterns = [
     # Catalogue
     path('catalogue/', include('apps.catalogue.urls', namespace='catalogue')),
 
+    # Orders, cart, checkout, webhook
+    path('', include('apps.orders.urls', namespace='orders')),
+
     # Static pages
     path('support/', TemplateView.as_view(template_name='pages/support.html'), name='support'),
     path('privacy-policy/', TemplateView.as_view(template_name='pages/privacy_policy.html'), name='privacy_policy'),

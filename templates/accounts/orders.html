@@ -3,8 +3,88 @@
 {% block title %}My Orders | AntiqueTunes{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-16">
-  <h1 class="font-display text-3xl text-mahogany mb-8">My Orders</h1>
-  <p class="text-gray-500">You have no orders yet.</p>
-</div>
+<main class="bg-cream min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <h1 class="font-display text-3xl text-mahogany mb-8">My Orders</h1>
+
+    {% if orders %}
+    <div class="space-y-4">
+      {% for order in orders %}
+      <div class="bg-white border border-parchment rounded-xl overflow-hidden">
+
+        {# Order header #}
+        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 bg-parchment/40 border-b border-parchment">
+          <div>
+            <span class="font-semibold text-mahogany text-sm">{{ order.order_reference }}</span>
+            <span class="text-gray-400 text-xs ml-3">{{ order.created_at|date:"F j, Y" }}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="font-display text-mahogany">${{ order.total }}</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+              {% if order.status == 'paid' %}bg-green-100 text-green-800
+              {% elif order.status == 'pending' %}bg-yellow-100 text-yellow-800
+              {% elif order.status == 'refunded' %}bg-gray-100 text-gray-600
+              {% else %}bg-red-100 text-red-700{% endif %}">
+              {{ order.get_status_display }}
+            </span>
+          </div>
+        </div>
+
+        {# Order items #}
+        <ul class="divide-y divide-parchment/50">
+          {% for order_item in order.items.all %}
+          <li class="flex items-center justify-between gap-4 px-6 py-4">
+            <div class="min-w-0">
+              <p class="font-medium text-mahogany truncate">
+                {% if order_item.sheet_music %}
+                  {{ order_item.sheet_music.title }}
+                {% else %}
+                  Item no longer available
+                {% endif %}
+              </p>
+              {% if order_item.sheet_music.composer %}
+              <p class="text-sm text-gray-500">{{ order_item.sheet_music.composer }}</p>
+              {% endif %}
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="text-sm text-gray-500">${{ order_item.unit_price }}</span>
+              {% if order.status == 'paid' %}
+              {% with token=order_item.tokens.first %}
+              {% if token %}
+              <a href="{% url 'accounts:download' token.token %}"
+                 class="inline-flex items-center gap-1.5 bg-mahogany text-cream px-3 py-1.5 rounded text-xs font-semibold hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Download
+              </a>
+              {% endif %}
+              {% endwith %}
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center py-20">
+      <svg class="mx-auto w-16 h-16 text-parchment mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      <h2 class="font-display text-2xl text-mahogany mb-3">No orders yet</h2>
+      <p class="text-gray-500 mb-8">When you make a purchase, your orders will appear here.</p>
+      <a href="/catalogue/"
+         class="inline-block bg-mahogany text-cream px-6 py-3 rounded-lg font-semibold hover:bg-mahogany-light transition-colors">
+        Browse the Collection
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</main>
 {% endblock %}

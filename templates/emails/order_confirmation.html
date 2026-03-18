@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your AntiqueTunes Order — {{ order.order_reference }}</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f5f0e8; font-family: Georgia, 'Times New Roman', serif; color: #2d2d2d; }
+    .wrapper { max-width: 600px; margin: 0 auto; background: #faf6ee; }
+    .header { background: #4a1c0d; padding: 32px 40px; text-align: center; }
+    .header h1 { margin: 0; color: #c9a84c; font-size: 28px; letter-spacing: 1px; }
+    .header p { margin: 6px 0 0; color: rgba(255,255,255,0.6); font-size: 14px; }
+    .body { padding: 36px 40px; }
+    .order-ref { background: #e8dcc8; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 28px; }
+    .order-ref p { margin: 0; font-size: 13px; color: #7a5c44; }
+    .order-ref strong { display: block; font-size: 20px; color: #4a1c0d; margin-top: 4px; letter-spacing: 1px; }
+    h2 { color: #4a1c0d; font-size: 18px; margin: 0 0 16px; border-bottom: 1px solid #e8dcc8; padding-bottom: 8px; }
+    .item { border: 1px solid #e8dcc8; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .item-title { font-size: 16px; font-weight: bold; color: #4a1c0d; margin: 0 0 4px; }
+    .item-composer { font-size: 14px; color: #7a5c44; margin: 0 0 12px; }
+    .download-btn { display: inline-block; background: #4a1c0d; color: #ffffff !important; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold; }
+    .download-btn:hover { background: #6b2d12; }
+    .item-note { font-size: 12px; color: #999; margin: 8px 0 0; }
+    .guest-notice { background: #e8dcc8; border-radius: 8px; padding: 16px; margin-top: 24px; font-size: 13px; color: #5a3a22; }
+    .guest-notice a { color: #4a1c0d; }
+    .footer { background: #4a1c0d; padding: 24px 40px; text-align: center; }
+    .footer p { margin: 0; color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.8; }
+    .footer a { color: #c9a84c; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <h1>AntiqueTunes</h1>
+    <p>Rare Early 20th Century Sheet Music</p>
+  </div>
+
+  <div class="body">
+    <p style="font-size:16px; margin: 0 0 20px;">Thank you for your purchase!</p>
+
+    <div class="order-ref">
+      <p>Order Reference</p>
+      <strong>{{ order.order_reference }}</strong>
+    </div>
+
+    <h2>Your Downloads</h2>
+
+    {% for token in tokens %}
+    <div class="item">
+      <p class="item-title">{{ token.order_item.sheet_music.title }}</p>
+      {% if token.order_item.sheet_music.composer %}
+      <p class="item-composer">{{ token.order_item.sheet_music.composer }}</p>
+      {% endif %}
+      <a href="{{ site_url }}/account/downloads/{{ token.token }}/" class="download-btn">
+        ↓ Download PDF
+      </a>
+      <p class="item-note">
+        {% if token.expires_at %}
+          Link expires {{ token.expires_at|date:"F j, Y" }} &middot; {{ token.max_downloads }} downloads allowed
+        {% else %}
+          Permanent link &middot; Unlimited downloads
+        {% endif %}
+      </p>
+    </div>
+    {% endfor %}
+
+    {% if not order.customer %}
+    <div class="guest-notice">
+      <strong>Keep your downloads safe</strong><br>
+      Your guest download links expire in 30 days.
+      <a href="{{ site_url }}/account/register/">Create a free account</a>
+      with this email address to get permanent, unlimited access to all your purchases.
+    </div>
+    {% endif %}
+
+    <p style="font-size:13px; color:#999; margin-top:28px;">
+      Questions? Visit <a href="{{ site_url }}/support/" style="color:#4a1c0d;">{{ site_url }}/support/</a>
+      or reply to this email.
+    </p>
+  </div>
+
+  <div class="footer">
+    <p>
+      &copy; {% now "Y" %} AntiqueTunes &mdash; Rare Sheet Music from the Early 20th Century<br>
+      <a href="{{ site_url }}">{{ site_url }}</a>
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

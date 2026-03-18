@@ -6,3 +6,4 @@ Pillow>=10.0
 pdf2image>=1.17
 psycopg2-binary>=2.9
 gunicorn>=22.0
+stripe>=10.0

@@ -1,0 +1,27 @@
+Hello,
+
+Thank you for your purchase from AntiqueTunes!
+
+Order Reference: {{ order.order_reference }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YOUR DOWNLOADS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{% for token in tokens %}{{ token.order_item.sheet_music.title }}{% if token.order_item.sheet_music.composer %} — {{ token.order_item.sheet_music.composer }}{% endif %}
+Download: {{ site_url }}/account/downloads/{{ token.token }}/
+{% if token.expires_at %}(Link expires {{ token.expires_at|date:"F j, Y" }} · {{ token.max_downloads }} downloads){% else %}(Permanent link · Unlimited downloads){% endif %}
+
+{% endfor %}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{% if not order.customer %}
+TIP: Create a free account at {{ site_url }}/account/register/ using this email address to get permanent, unlimited access to all your downloads.
+
+{% endif %}
+If you have any questions, reply to this email or visit {{ site_url }}/support/
+
+Thank you for supporting rare sheet music preservation.
+
+— The AntiqueTunes Team
+{{ site_url }}

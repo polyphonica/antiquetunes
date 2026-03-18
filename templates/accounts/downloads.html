@@ -3,8 +3,78 @@
 {% block title %}My Downloads | AntiqueTunes{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-16">
-  <h1 class="font-display text-3xl text-mahogany mb-8">My Downloads</h1>
-  <p class="text-gray-500">You have no downloads yet.</p>
-</div>
+<main class="bg-cream min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <h1 class="font-display text-3xl text-mahogany mb-8">My Downloads</h1>
+
+    {% if tokens %}
+    <ul class="space-y-3" aria-label="Your purchased downloads">
+      {% for token in tokens %}
+      <li class="bg-white border border-parchment rounded-xl p-5 flex items-center gap-4">
+
+        {# Cover thumbnail #}
+        {% if token.order_item.sheet_music.cover_image %}
+        <img src="{{ token.order_item.sheet_music.cover_image.url }}"
+             alt="{{ token.order_item.sheet_music.title }} cover"
+             class="w-14 h-14 object-cover rounded-lg border border-parchment flex-shrink-0" />
+        {% else %}
+        <div class="w-14 h-14 bg-parchment rounded-lg flex-shrink-0 flex items-center justify-center">
+          <svg class="w-5 h-5 text-mahogany/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm12-3c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"/>
+          </svg>
+        </div>
+        {% endif %}
+
+        {# Info #}
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-mahogany truncate">
+            {% if token.order_item.sheet_music %}
+              {{ token.order_item.sheet_music.title }}
+            {% else %}
+              Item unavailable
+            {% endif %}
+          </p>
+          {% if token.order_item.sheet_music.composer %}
+          <p class="text-sm text-gray-500">{{ token.order_item.sheet_music.composer }}</p>
+          {% endif %}
+          <p class="text-xs text-gray-400 mt-1">
+            Order {{ token.order_item.order.order_reference }}
+            &middot; {{ token.download_count }} download{{ token.download_count|pluralize }} used
+          </p>
+        </div>
+
+        {# Download button #}
+        {% if token.is_valid %}
+        <a href="{% url 'accounts:download' token.token %}"
+           class="flex-shrink-0 inline-flex items-center gap-2 bg-mahogany text-cream px-4 py-2 rounded-lg text-sm font-semibold hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Download PDF
+        </a>
+        {% else %}
+        <span class="flex-shrink-0 text-xs text-gray-400 italic">Expired</span>
+        {% endif %}
+
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+    <div class="text-center py-20">
+      <svg class="mx-auto w-16 h-16 text-parchment mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+      </svg>
+      <h2 class="font-display text-2xl text-mahogany mb-3">No downloads yet</h2>
+      <p class="text-gray-500 mb-8">Your purchased sheet music will appear here after checkout.</p>
+      <a href="/catalogue/"
+         class="inline-block bg-mahogany text-cream px-6 py-3 rounded-lg font-semibold hover:bg-mahogany-light transition-colors">
+        Browse the Collection
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</main>
 {% endblock %}

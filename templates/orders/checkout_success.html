@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed | AntiqueTunes{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    {# Success header #}
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h1 class="font-display text-3xl text-mahogany mb-2">Order Confirmed!</h1>
+      {% if order %}
+      <p class="text-gray-600">
+        Thank you for your purchase. Your order reference is
+        <strong class="text-mahogany">{{ order.order_reference }}</strong>.
+      </p>
+      <p class="text-sm text-gray-400 mt-1">A confirmation email has been sent to {{ order.email }}.</p>
+      {% else %}
+      <p class="text-gray-600">Thank you for your purchase. A confirmation email is on its way.</p>
+      {% endif %}
+    </div>
+
+    {# Download links #}
+    {% if tokens %}
+    <div class="bg-white border border-parchment rounded-xl p-6 mb-8">
+      <h2 class="font-display text-xl text-mahogany mb-4">Your Downloads</h2>
+      <ul class="space-y-4" aria-label="Your purchased downloads">
+        {% for token in tokens %}
+        <li class="flex items-center justify-between gap-4 py-3 border-b border-parchment/50 last:border-0">
+          <div class="min-w-0">
+            <p class="font-semibold text-mahogany truncate">{{ token.order_item.sheet_music.title }}</p>
+            {% if token.order_item.sheet_music.composer %}
+            <p class="text-sm text-gray-500">{{ token.order_item.sheet_music.composer }}</p>
+            {% endif %}
+          </div>
+          <a href="{% url 'accounts:download' token.token %}"
+             class="flex-shrink-0 inline-flex items-center gap-2 bg-mahogany text-cream px-4 py-2 rounded-lg text-sm font-semibold hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download PDF
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      {% if not request.user.is_authenticated %}
+      <div class="mt-6 bg-parchment rounded-lg p-4 text-sm">
+        <p class="font-semibold text-mahogany mb-1">Keep your downloads safe</p>
+        <p class="text-gray-600">Guest links expire in 30 days (5 downloads each).
+          <a href="/account/register/" class="text-mahogany underline hover:text-gold transition-colors">Create a free account</a>
+          to get permanent, unlimited access to all your purchases.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="bg-parchment rounded-xl p-6 mb-8 text-center">
+      <p class="text-gray-600">Your download links are being prepared. Check your email in a moment, or visit
+        {% if request.user.is_authenticated %}
+        <a href="/account/downloads/" class="text-mahogany underline hover:text-gold transition-colors">My Downloads</a>.
+        {% else %}
+        your inbox for the confirmation email.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+
+    {# Actions #}
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      {% if request.user.is_authenticated %}
+      <a href="/account/orders/"
+         class="inline-block text-center border border-mahogany text-mahogany px-5 py-2.5 rounded-lg font-medium hover:bg-mahogany hover:text-cream transition-colors">
+        View My Orders
+      </a>
+      {% endif %}
+      <a href="/catalogue/"
+         class="inline-block text-center bg-mahogany text-cream px-5 py-2.5 rounded-lg font-medium hover:bg-mahogany-light transition-colors">
+        Continue Browsing
+      </a>
+    </div>
+
+  </div>
+</main>
+{% endblock %}

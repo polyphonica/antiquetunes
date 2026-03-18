@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout Cancelled | AntiqueTunes{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-parchment rounded-full mb-6">
+      <svg class="w-8 h-8 text-mahogany/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </div>
+
+    <h1 class="font-display text-3xl text-mahogany mb-3">Checkout Cancelled</h1>
+    <p class="text-gray-600 mb-8">No payment was taken. Your cart is still intact — you can return to it whenever you're ready.</p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/cart/"
+         class="inline-block text-center bg-mahogany text-cream px-6 py-3 rounded-lg font-semibold hover:bg-mahogany-light transition-colors">
+        Return to Cart
+      </a>
+      <a href="/catalogue/"
+         class="inline-block text-center border border-mahogany text-mahogany px-6 py-3 rounded-lg font-semibold hover:bg-mahogany hover:text-cream transition-colors">
+        Keep Browsing
+      </a>
+    </div>
+
+    <p class="mt-8 text-sm text-gray-400">
+      Need help? <a href="/support/" class="text-mahogany hover:text-gold transition-colors underline">Visit our support page</a>.
+    </p>
+
+  </div>
+</main>
+{% endblock %}

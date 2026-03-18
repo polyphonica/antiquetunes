@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Cart | AntiqueTunes{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <h1 class="font-display text-3xl text-mahogany mb-8">Your Cart</h1>
+
+    {% if cart_items %}
+
+      {# Item list #}
+      <div class="space-y-4 mb-8" role="list" aria-label="Cart items">
+        {% for item in cart_items %}
+        <div class="flex items-center gap-4 bg-white border border-parchment rounded-xl p-4" role="listitem">
+
+          {# Cover thumbnail #}
+          {% if item.cover_url %}
+          <a href="{% if item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
+             tabindex="-1" aria-hidden="true">
+            <img src="{{ item.cover_url }}" alt="{{ item.title }} cover"
+                 class="w-16 h-16 object-cover rounded-lg border border-parchment flex-shrink-0" />
+          </a>
+          {% else %}
+          <div class="w-16 h-16 bg-parchment rounded-lg flex-shrink-0 flex items-center justify-center">
+            <svg class="w-6 h-6 text-mahogany/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm12-3c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"/>
+            </svg>
+          </div>
+          {% endif %}
+
+          {# Title + composer #}
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-mahogany truncate">
+              <a href="{% if item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
+                 class="hover:text-gold transition-colors">
+                {{ item.title }}
+              </a>
+            </p>
+            {% if item.composer %}
+            <p class="text-sm text-gray-500">{{ item.composer }}</p>
+            {% endif %}
+            <p class="text-xs text-gray-400 mt-1">Digital PDF Download</p>
+          </div>
+
+          {# Price #}
+          <p class="font-display text-lg text-mahogany flex-shrink-0">${{ item.price }}</p>
+
+          {# Remove button #}
+          <form method="post" action="{% url 'orders:cart_remove' item.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
+                    aria-label="Remove {{ item.title }} from cart">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </form>
+
+        </div>
+        {% endfor %}
+      </div>
+
+      {# Order summary + checkout #}
+      <div class="bg-white border border-parchment rounded-xl p-6">
+        <div class="flex justify-between items-center mb-6">
+          <span class="text-gray-600 font-medium">Total</span>
+          <span class="font-display text-2xl text-mahogany">${{ total|floatformat:2 }}</span>
+        </div>
+
+        <form method="post" action="{% url 'orders:checkout' %}">
+          {% csrf_token %}
+          <button type="submit"
+                  class="w-full bg-mahogany text-cream py-3 rounded-lg font-semibold text-lg
+                         hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+            Proceed to Checkout
+          </button>
+        </form>
+
+        <p class="text-xs text-gray-400 text-center mt-3">
+          Secure payment via Stripe. Instant download after purchase.
+        </p>
+
+        <div class="mt-4 text-center">
+          <a href="/catalogue/" class="text-sm text-mahogany/70 hover:text-gold transition-colors">
+            ← Continue browsing
+          </a>
+        </div>
+      </div>
+
+    {% else %}
+
+      {# Empty cart #}
+      <div class="text-center py-20">
+        <svg class="mx-auto w-16 h-16 text-parchment mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 7h12.8M7 13H5.4M17 21a2 2 0 100-4 2 2 0 000 4zm-10 0a2 2 0 100-4 2 2 0 000 4z"/>
+        </svg>
+        <h2 class="font-display text-2xl text-mahogany mb-3">Your cart is empty</h2>
+        <p class="text-gray-500 mb-8">Browse our collection and add some sheet music to get started.</p>
+        <a href="/catalogue/"
+           class="inline-block bg-mahogany text-cream px-6 py-3 rounded-lg font-semibold hover:bg-mahogany-light transition-colors">
+          Browse the Collection
+        </a>
+      </div>
+
+    {% endif %}
+
+  </div>
+</main>
+{% endblock %}

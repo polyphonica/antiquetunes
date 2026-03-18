@@ -61,9 +61,27 @@ def register_view(request):
 
 @login_required
 def orders_view(request):
-    return render(request, 'accounts/orders.html')
+    orders = (
+        request.user.orders
+        .prefetch_related('items__sheet_music')
+        .order_by('-created_at')
+    )
+    return render(request, 'accounts/orders.html', {
+        'orders': orders,
+        'seo_title': 'My Orders',
+    })
 
 
 @login_required
 def downloads_view(request):
-    return render(request, 'accounts/downloads.html')
+    from apps.orders.models import DownloadToken
+    tokens = (
+        DownloadToken.objects
+        .filter(customer=request.user)
+        .select_related('order_item__sheet_music', 'order_item__order')
+        .order_by('-created_at')
+    )
+    return render(request, 'accounts/downloads.html', {
+        'tokens': tokens,
+        'seo_title': 'My Downloads',
+    })
