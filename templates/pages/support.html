@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Support | AntiqueTunes{% endblock %}
+{% block meta_description %}Get help with your AntiqueTunes order, downloads, and account. Find answers to common questions or contact us directly.{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+
+  {# ── Page header ── #}
+  <div class="bg-mahogany text-cream py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav aria-label="Breadcrumb" class="text-sm text-cream/50 mb-4">
+        <ol class="flex items-center gap-2">
+          <li><a href="/" class="hover:text-gold transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page" class="text-cream/80">Support</li>
+        </ol>
+      </nav>
+      <h1 class="font-display text-4xl font-bold">Support</h1>
+      <p class="mt-3 text-cream/70 text-lg">We're here to help. Find answers below or get in touch.</p>
+    </div>
+  </div>
+
+  {# ── Content ── #}
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    {# Contact card #}
+    <div class="bg-parchment border border-gold/30 rounded-lg p-6 mb-12">
+      <h2 class="font-display text-xl text-mahogany font-semibold mb-2">Contact Us</h2>
+      <p class="text-gray-700 mb-4">Can't find what you need below? Send us an email and we'll get back to you within one business day.</p>
+      <a href="mailto:support@antiquetunes.com" class="inline-block bg-mahogany text-cream px-5 py-2.5 rounded font-medium text-sm hover:bg-mahogany-light transition-colors">
+        Email support@antiquetunes.com
+      </a>
+    </div>
+
+    {# FAQ sections #}
+    <section aria-labelledby="faq-downloads">
+      <h2 id="faq-downloads" class="font-display text-2xl text-mahogany font-semibold mb-6 pb-2 border-b border-parchment">Downloads</h2>
+
+      <div class="space-y-6">
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Where do I find my downloads after purchase?</h3>
+          <p class="text-gray-700">If you have an account, your downloads are permanently available in your <a href="/account/downloads/" class="text-mahogany underline hover:text-gold transition-colors">Downloads Library</a>. If you checked out as a guest, download links are included in your order confirmation email.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">How many times can I download a file?</h3>
+          <p class="text-gray-700">Account holders have unlimited downloads with no expiry. Guest download links expire after 30 days and allow up to 5 downloads per file. We recommend creating a free account to keep permanent access.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">My download link has expired. What do I do?</h3>
+          <p class="text-gray-700">Email us at <a href="mailto:support@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">support@antiquetunes.com</a> with your order reference number and we'll send you a fresh link.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">What format are the files?</h3>
+          <p class="text-gray-700">All sheet music is delivered as a high-resolution PDF, typically scanned at 300 dpi or above from original early 20th century copies.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Can I print the sheet music?</h3>
+          <p class="text-gray-700">Yes. You may print the PDF for your own personal, non-commercial use. Please see our <a href="/terms-of-service/" class="text-mahogany underline hover:text-gold transition-colors">Terms of Service</a> for full details.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-orders" class="mt-12">
+      <h2 id="faq-orders" class="font-display text-2xl text-mahogany font-semibold mb-6 pb-2 border-b border-parchment">Orders & Payment</h2>
+
+      <div class="space-y-6">
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">What payment methods do you accept?</h3>
+          <p class="text-gray-700">We accept all major credit and debit cards (Visa, Mastercard, American Express) via Stripe's secure checkout. Apple Pay and Google Pay are also supported where available.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">I didn't receive a confirmation email. What should I do?</h3>
+          <p class="text-gray-700">Check your spam or junk folder first. If it's not there, email us at <a href="mailto:support@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">support@antiquetunes.com</a> with the email address you used at checkout and we'll look into it.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Can I get a refund?</h3>
+          <p class="text-gray-700">Because our products are digital downloads that are accessible immediately after purchase, we do not offer refunds as a matter of course. However, if you have a genuine issue — for example the file is corrupt or not as described — please contact us and we'll make it right.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Where can I find my order reference?</h3>
+          <p class="text-gray-700">Your order reference (e.g. AT-2025-00042) is shown on your order confirmation email and in your <a href="/account/orders/" class="text-mahogany underline hover:text-gold transition-colors">Order History</a> if you have an account.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-account" class="mt-12">
+      <h2 id="faq-account" class="font-display text-2xl text-mahogany font-semibold mb-6 pb-2 border-b border-parchment">Account</h2>
+
+      <div class="space-y-6">
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Do I need an account to buy?</h3>
+          <p class="text-gray-700">No — you can check out as a guest. However, creating a free account gives you permanent, unlimited access to all your downloads in one place.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">I forgot my password. How do I reset it?</h3>
+          <p class="text-gray-700">On the <a href="/account/login/" class="text-mahogany underline hover:text-gold transition-colors">Login page</a>, click "Forgot your password?" and we'll email you a reset link.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">I bought something as a guest. Can I link it to my account?</h3>
+          <p class="text-gray-700">Yes. If you register with the same email address used at checkout, your previous orders and downloads will be merged into your account automatically.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-content" class="mt-12">
+      <h2 id="faq-content" class="font-display text-2xl text-mahogany font-semibold mb-6 pb-2 border-b border-parchment">Content & Copyright</h2>
+
+      <div class="space-y-6">
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Is this music in the public domain?</h3>
+          <p class="text-gray-700">The underlying musical compositions in our catalogue — generally published before 1928 — are in the public domain in the United States. Our high-resolution scans and digitised editions represent our own original work and are protected by copyright.</p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-mahogany mb-1">Can I use the sheet music in a performance or recording?</h3>
+          <p class="text-gray-700">You may perform and record the underlying compositions freely, as they are in the public domain. You may not reproduce, resell, or redistribute our PDF editions. See our <a href="/terms-of-service/" class="text-mahogany underline hover:text-gold transition-colors">Terms of Service</a> for full details.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+{% endblock %}

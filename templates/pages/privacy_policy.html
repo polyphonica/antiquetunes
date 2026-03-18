@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy | AntiqueTunes{% endblock %}
+{% block meta_description %}How AntiqueTunes collects, uses, and protects your personal information. Last updated {% now "F Y" %}.{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+
+  {# ── Page header ── #}
+  <div class="bg-mahogany text-cream py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav aria-label="Breadcrumb" class="text-sm text-cream/50 mb-4">
+        <ol class="flex items-center gap-2">
+          <li><a href="/" class="hover:text-gold transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page" class="text-cream/80">Privacy Policy</li>
+        </ol>
+      </nav>
+      <h1 class="font-display text-4xl font-bold">Privacy Policy</h1>
+      <p class="mt-3 text-cream/70">Last updated: {% now "F j, Y" %}</p>
+    </div>
+  </div>
+
+  {# ── Content ── #}
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 prose-headings:font-display prose-headings:text-mahogany">
+
+    <p class="text-gray-700 mb-8 text-lg">
+      AntiqueTunes ("we", "us", or "our") is committed to protecting your personal information. This policy explains what data we collect, how we use it, and your rights regarding it.
+    </p>
+
+    <section aria-labelledby="pp-who" class="mb-10">
+      <h2 id="pp-who" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">1. Who We Are</h2>
+      <p class="text-gray-700">AntiqueTunes operates the website at <strong>antiquetunes.com</strong>, selling digitised sheet music PDFs of rare early 20th century popular music. You can contact us at <a href="mailto:privacy@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">privacy@antiquetunes.com</a>.</p>
+    </section>
+
+    <section aria-labelledby="pp-collect" class="mb-10">
+      <h2 id="pp-collect" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">2. What We Collect</h2>
+
+      <h3 class="font-semibold text-mahogany mt-6 mb-2">Information you provide</h3>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li><strong>Account registration:</strong> email address and display name.</li>
+        <li><strong>Guest checkout:</strong> email address for order confirmation and download delivery.</li>
+        <li><strong>Contact form:</strong> name, email address, and message content.</li>
+      </ul>
+
+      <h3 class="font-semibold text-mahogany mt-6 mb-2">Payment information</h3>
+      <p class="text-gray-700">We do not store your card details. All payment processing is handled by <strong>Stripe</strong>. We receive a confirmation of payment outcome and a Stripe session reference only. Stripe's own privacy policy applies to data you enter on their checkout page.</p>
+
+      <h3 class="font-semibold text-mahogany mt-6 mb-2">Information collected automatically</h3>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li><strong>Server logs:</strong> IP address, browser type, pages visited, timestamps. Retained for up to 90 days for security and diagnostic purposes.</li>
+        <li><strong>Session cookie:</strong> a temporary cookie that keeps you logged in and maintains your shopping cart. It does not track you across other websites.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="pp-use" class="mb-10">
+      <h2 id="pp-use" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">3. How We Use Your Information</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li>To process your order and deliver your purchased downloads.</li>
+        <li>To send your order confirmation and download links by email.</li>
+        <li>To provide customer support and respond to your enquiries.</li>
+        <li>To maintain the security of our website and prevent fraud.</li>
+        <li>To comply with our legal obligations.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">We do not sell, rent, or share your personal data with third parties for marketing purposes.</p>
+    </section>
+
+    <section aria-labelledby="pp-legal" class="mb-10">
+      <h2 id="pp-legal" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">4. Legal Basis for Processing</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li><strong>Contract:</strong> processing your order and delivering your downloads.</li>
+        <li><strong>Legitimate interests:</strong> maintaining site security and preventing fraud.</li>
+        <li><strong>Legal obligation:</strong> complying with applicable laws.</li>
+        <li><strong>Consent:</strong> if you opt in to any future marketing communications (currently not offered).</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="pp-third-party" class="mb-10">
+      <h2 id="pp-third-party" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">5. Third Parties</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li><strong>Stripe:</strong> payment processing. Your payment data is governed by Stripe's privacy policy.</li>
+        <li><strong>Ionos:</strong> website hosting on a virtual private server in the EU/US. Server-level logs may be held by the hosting provider.</li>
+        <li><strong>Google Fonts:</strong> fonts are loaded from Google's CDN. Google may log the request.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">We do not use advertising networks, tracking pixels, or analytics services that profile you across sites.</p>
+    </section>
+
+    <section aria-labelledby="pp-retention" class="mb-10">
+      <h2 id="pp-retention" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">6. Data Retention</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li><strong>Account data:</strong> retained while your account is active. Deleted within 30 days of a verified deletion request.</li>
+        <li><strong>Order records:</strong> retained for 7 years to comply with financial record-keeping requirements.</li>
+        <li><strong>Server logs:</strong> retained for up to 90 days.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="pp-rights" class="mb-10">
+      <h2 id="pp-rights" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">7. Your Rights</h2>
+      <p class="text-gray-700 mb-3">Depending on your location, you may have the right to:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li>Access the personal data we hold about you.</li>
+        <li>Correct inaccurate data.</li>
+        <li>Request deletion of your data (subject to legal retention requirements).</li>
+        <li>Restrict or object to certain processing.</li>
+        <li>Receive a portable copy of your data.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">To exercise any of these rights, email <a href="mailto:privacy@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">privacy@antiquetunes.com</a>. We will respond within 30 days.</p>
+    </section>
+
+    <section aria-labelledby="pp-cookies" class="mb-10">
+      <h2 id="pp-cookies" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">8. Cookies</h2>
+      <p class="text-gray-700 mb-3">We use only essential cookies:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li><strong>Session cookie</strong> (<code class="bg-parchment px-1 rounded text-sm">sessionid</code>): keeps you logged in and maintains your cart. Expires when you close your browser, or after 2 weeks if you choose "Remember me".</li>
+        <li><strong>CSRF token</strong> (<code class="bg-parchment px-1 rounded text-sm">csrftoken</code>): protects forms against cross-site request forgery attacks.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">We do not use advertising or analytics cookies.</p>
+    </section>
+
+    <section aria-labelledby="pp-security" class="mb-10">
+      <h2 id="pp-security" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">9. Security</h2>
+      <p class="text-gray-700">All data is transmitted over HTTPS (TLS). Passwords are stored as salted hashes — we never store plain-text passwords. Purchased PDF files are stored in a protected location not directly accessible from the web and are served only to validated token holders.</p>
+    </section>
+
+    <section aria-labelledby="pp-changes" class="mb-10">
+      <h2 id="pp-changes" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">10. Changes to This Policy</h2>
+      <p class="text-gray-700">We may update this policy from time to time. The "last updated" date at the top of the page will reflect any changes. Continued use of the site after changes constitutes acceptance of the revised policy.</p>
+    </section>
+
+    <section aria-labelledby="pp-contact" class="mb-10">
+      <h2 id="pp-contact" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">11. Contact</h2>
+      <p class="text-gray-700">For any privacy-related questions or requests, contact us at <a href="mailto:privacy@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">privacy@antiquetunes.com</a>.</p>
+    </section>
+
+  </div>
+</main>
+{% endblock %}

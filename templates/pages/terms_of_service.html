@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service | AntiqueTunes{% endblock %}
+{% block meta_description %}Terms and conditions governing the use of AntiqueTunes and the purchase of digital sheet music. Last updated {% now "F Y" %}.{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+
+  {# ── Page header ── #}
+  <div class="bg-mahogany text-cream py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav aria-label="Breadcrumb" class="text-sm text-cream/50 mb-4">
+        <ol class="flex items-center gap-2">
+          <li><a href="/" class="hover:text-gold transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li aria-current="page" class="text-cream/80">Terms of Service</li>
+        </ol>
+      </nav>
+      <h1 class="font-display text-4xl font-bold">Terms of Service</h1>
+      <p class="mt-3 text-cream/70">Last updated: {% now "F j, Y" %}</p>
+    </div>
+  </div>
+
+  {# ── Content ── #}
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <p class="text-gray-700 mb-8 text-lg">
+      Please read these Terms of Service carefully before purchasing from or using AntiqueTunes. By accessing the site or completing a purchase, you agree to be bound by these terms.
+    </p>
+
+    <section aria-labelledby="tos-about" class="mb-10">
+      <h2 id="tos-about" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">1. About AntiqueTunes</h2>
+      <p class="text-gray-700">AntiqueTunes operates at <strong>antiquetunes.com</strong> and sells high-resolution digitised PDF editions of rare early 20th century sheet music. References to "we", "us", or "our" mean AntiqueTunes. References to "you" mean the customer or site visitor.</p>
+    </section>
+
+    <section aria-labelledby="tos-digital" class="mb-10">
+      <h2 id="tos-digital" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">2. Digital Products</h2>
+      <p class="text-gray-700 mb-3">All products sold on AntiqueTunes are digital downloads (PDF files). By completing a purchase you acknowledge:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li>The product is a digital file and is made available to you immediately upon successful payment.</li>
+        <li>You are purchasing a personal, non-exclusive, non-transferable licence to use the file as described in Section 4.</li>
+        <li>Digital products cannot be "returned" in the conventional sense; our refund policy is set out in Section 6.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tos-accounts" class="mb-10">
+      <h2 id="tos-accounts" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">3. Accounts & Guest Checkout</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li>You may purchase as a guest or by creating a free account.</li>
+        <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+        <li>You must provide accurate information when registering or checking out.</li>
+        <li>We reserve the right to suspend or terminate accounts used fraudulently or in breach of these terms.</li>
+        <li>Guest download links expire after 30 days and are limited to 5 downloads per file. Account holders receive permanent, unlimited access to their purchases.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tos-licence" class="mb-10">
+      <h2 id="tos-licence" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">4. Licence to Use Purchased Files</h2>
+
+      <h3 class="font-semibold text-mahogany mt-4 mb-2">What you may do</h3>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li>Download and save the PDF to your personal devices.</li>
+        <li>Print the PDF for your own personal, non-commercial use.</li>
+        <li>Perform the underlying musical composition (which is in the public domain).</li>
+        <li>Record yourself performing the composition for personal or commercial release.</li>
+      </ul>
+
+      <h3 class="font-semibold text-mahogany mt-6 mb-2">What you may not do</h3>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li>Reproduce, redistribute, resell, or sublicense the PDF file or any portion of it.</li>
+        <li>Share, upload, or post the PDF file publicly (e.g. on file-sharing sites, social media, or cloud drives accessible to others).</li>
+        <li>Use the PDF or any image derived from it for commercial purposes (e.g. merchandise, publications) without prior written permission.</li>
+        <li>Remove or obscure any watermark or copyright notice.</li>
+      </ul>
+
+      <p class="text-gray-700 mt-4">Our PDF editions are our original creative work and are protected by copyright, regardless of the public-domain status of the underlying composition.</p>
+    </section>
+
+    <section aria-labelledby="tos-payment" class="mb-10">
+      <h2 id="tos-payment" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">5. Pricing & Payment</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li>All prices are in US Dollars (USD) and are inclusive of any applicable taxes unless otherwise stated.</li>
+        <li>Payment is processed securely by Stripe. We do not store your card details.</li>
+        <li>We reserve the right to change prices at any time. The price shown at the time of purchase is the price you will be charged.</li>
+        <li>In the event of a pricing error, we reserve the right to cancel the order and issue a full refund.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tos-refunds" class="mb-10">
+      <h2 id="tos-refunds" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">6. Refunds & Cancellations</h2>
+      <p class="text-gray-700 mb-3">Because our products are digital files delivered immediately upon payment, we generally do not offer refunds. Exceptions include:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li><strong>Defective file:</strong> if the PDF is corrupted, incomplete, or significantly different from what was described, contact us within 14 days and we will provide a corrected file or a full refund.</li>
+        <li><strong>Duplicate purchase:</strong> if you accidentally purchase the same item twice, contact us within 14 days for a refund on the duplicate.</li>
+        <li><strong>Unauthorised transaction:</strong> if you believe a purchase was made fraudulently using your account, contact us immediately.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">To request a refund, email <a href="mailto:support@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">support@antiquetunes.com</a> with your order reference.</p>
+    </section>
+
+    <section aria-labelledby="tos-copyright" class="mb-10">
+      <h2 id="tos-copyright" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">7. Intellectual Property</h2>
+      <p class="text-gray-700 mb-3">All content on AntiqueTunes — including but not limited to PDF editions, cover images, thumbnails, site design, text, and branding — is owned by AntiqueTunes or its licensors and is protected by copyright and other intellectual property laws.</p>
+      <p class="text-gray-700">The underlying musical compositions in our catalogue are generally in the public domain in the United States. This does not grant you any rights in our digitised editions beyond the licence set out in Section 4.</p>
+    </section>
+
+    <section aria-labelledby="tos-conduct" class="mb-10">
+      <h2 id="tos-conduct" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">8. Acceptable Use</h2>
+      <p class="text-gray-700 mb-3">You agree not to:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 ml-2">
+        <li>Use the site in any way that violates applicable laws or regulations.</li>
+        <li>Attempt to gain unauthorised access to any part of the site or its underlying systems.</li>
+        <li>Use automated tools to scrape, crawl, or bulk-download content.</li>
+        <li>Impersonate any person or entity or misrepresent your affiliation with any person or entity.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tos-disclaimer" class="mb-10">
+      <h2 id="tos-disclaimer" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">9. Disclaimers & Limitation of Liability</h2>
+      <p class="text-gray-700 mb-3">The site and its content are provided "as is" without warranties of any kind, express or implied. To the fullest extent permitted by law:</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-2 ml-2">
+        <li>We do not warrant that the site will be uninterrupted, error-free, or free of viruses.</li>
+        <li>We are not liable for any indirect, incidental, or consequential losses arising from your use of the site or purchased files.</li>
+        <li>Our total liability to you in connection with any purchase shall not exceed the amount you paid for that purchase.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">Nothing in these terms limits liability that cannot be excluded under applicable consumer protection law.</p>
+    </section>
+
+    <section aria-labelledby="tos-privacy" class="mb-10">
+      <h2 id="tos-privacy" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">10. Privacy</h2>
+      <p class="text-gray-700">Your use of the site is also governed by our <a href="/privacy-policy/" class="text-mahogany underline hover:text-gold transition-colors">Privacy Policy</a>, which is incorporated into these Terms by reference.</p>
+    </section>
+
+    <section aria-labelledby="tos-changes" class="mb-10">
+      <h2 id="tos-changes" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">11. Changes to These Terms</h2>
+      <p class="text-gray-700">We may update these terms at any time. The "last updated" date at the top of this page will reflect any changes. Continued use of the site after changes constitutes acceptance of the revised terms. For significant changes, we will make reasonable efforts to notify registered account holders by email.</p>
+    </section>
+
+    <section aria-labelledby="tos-governing" class="mb-10">
+      <h2 id="tos-governing" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">12. Governing Law</h2>
+      <p class="text-gray-700">These terms are governed by the laws of the United States. Any disputes arising from or relating to these terms or your use of the site shall be subject to the exclusive jurisdiction of the applicable courts.</p>
+    </section>
+
+    <section aria-labelledby="tos-contact" class="mb-10">
+      <h2 id="tos-contact" class="font-display text-2xl text-mahogany font-semibold mb-4 pb-2 border-b border-parchment">13. Contact</h2>
+      <p class="text-gray-700">For any questions about these terms, email <a href="mailto:support@antiquetunes.com" class="text-mahogany underline hover:text-gold transition-colors">support@antiquetunes.com</a>.</p>
+    </section>
+
+  </div>
+</main>
+{% endblock %}

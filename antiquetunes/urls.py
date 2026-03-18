@@ -32,6 +32,11 @@ urlpatterns = [
     # Catalogue
     path('catalogue/', include('apps.catalogue.urls', namespace='catalogue')),
 
+    # Static pages
+    path('support/', TemplateView.as_view(template_name='pages/support.html'), name='support'),
+    path('privacy-policy/', TemplateView.as_view(template_name='pages/privacy_policy.html'), name='privacy_policy'),
+    path('terms-of-service/', TemplateView.as_view(template_name='pages/terms_of_service.html'), name='terms_of_service'),
+
     # SEO
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name='robots'),
