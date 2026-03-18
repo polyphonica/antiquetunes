@@ -1,6 +1,13 @@
 import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.text import slugify
+
+protected_storage = FileSystemStorage(
+    location=settings.PROTECTED_MEDIA_ROOT,
+    base_url=None,  # never publicly accessible
+)
 
 
 class Genre(models.Model):
@@ -162,7 +169,7 @@ class SheetMusic(models.Model):
         upload_to=sheet_music_preview_pdf_path, blank=True, editable=False
     )
     audio_sample = models.FileField(upload_to=sheet_music_audio_path, blank=True)
-    pdf_file = models.FileField(upload_to=sheet_music_pdf_path, blank=True)
+    pdf_file = models.FileField(upload_to=sheet_music_pdf_path, storage=protected_storage, blank=True)
 
     # Metadata
     page_count = models.PositiveSmallIntegerField(null=True, blank=True)
