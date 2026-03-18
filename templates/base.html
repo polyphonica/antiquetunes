@@ -90,14 +90,18 @@
 
   {# ── Flash messages ── #}
   {% if messages %}
-  <div aria-live="polite" aria-atomic="true" class="fixed top-4 right-4 z-50 space-y-2">
+  <div aria-live="polite" aria-atomic="true" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full">
     {% for message in messages %}
     <div role="alert"
-         class="px-5 py-3 rounded shadow-lg text-sm font-medium
+         class="flex items-start gap-3 px-4 py-3 rounded shadow-lg text-sm font-medium
                 {% if message.tags == 'error' %}bg-red-600 text-white
                 {% elif message.tags == 'success' %}bg-green-700 text-white
                 {% else %}bg-gold text-mahogany{% endif %}">
-      {{ message }}
+      <span class="flex-1">{{ message }}</span>
+      <button type="button"
+              onclick="this.closest('[role=alert]').remove()"
+              aria-label="Dismiss"
+              class="flex-shrink-0 ml-1 opacity-70 hover:opacity-100 transition-opacity leading-none text-lg">&times;</button>
     </div>
     {% endfor %}
   </div>
