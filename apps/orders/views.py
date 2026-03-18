@@ -194,10 +194,10 @@ def stripe_webhook(request):
     event_type = event['type']
     obj = event['data']['object']
 
-    if event_type == 'checkout.session.completed':
+    if event_type in ('checkout.session.completed', 'checkout.session.async_payment_succeeded'):
         _handle_checkout_completed(obj)
-    elif event_type == 'payment_intent.payment_failed':
-        _handle_payment_failed(obj)
+    elif event_type in ('checkout.session.async_payment_failed', 'checkout.session.expired'):
+        _handle_checkout_failed_or_expired(obj)
     elif event_type == 'charge.refunded':
         _handle_charge_refunded(obj)
 
@@ -241,6 +241,16 @@ def _handle_checkout_completed(session):
             )
 
     _send_order_confirmation(order)
+
+
+def _handle_checkout_failed_or_expired(session):
+    order_id = session.get('metadata', {}).get('order_id')
+    if not order_id:
+        return
+    Order.objects.filter(
+        pk=order_id,
+        status=Order.Status.PENDING,
+    ).update(status=Order.Status.FAILED)
 
 
 def _handle_payment_failed(payment_intent):
