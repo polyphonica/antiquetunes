@@ -20,6 +20,9 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
+# Tell Django it's behind an HTTPS proxy (Nginx)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Required for HTTPS POST requests (Django 4.0+)
 CSRF_TRUSTED_ORIGINS = [
     'https://antiquetunes.com',
