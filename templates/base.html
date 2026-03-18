@@ -97,7 +97,7 @@
                 {% if message.tags == 'error' %}bg-red-600 text-white
                 {% elif message.tags == 'success' %}bg-green-700 text-white
                 {% else %}bg-gold text-mahogany{% endif %}">
-      <span class="flex-1">{{ message }}</span>
+      <span class="flex-1">{{ message|safe }}</span>
       <button type="button"
               onclick="this.closest('[role=alert]').remove()"
               aria-label="Dismiss"

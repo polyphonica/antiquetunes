@@ -55,6 +55,21 @@ def cart_add(request):
         return redirect('home')
 
     item = get_object_or_404(SheetMusic, pk=item_id, is_active=True)
+
+    # Block logged-in users from re-purchasing something they already own
+    if request.user.is_authenticated:
+        already_owns = DownloadToken.objects.filter(
+            customer=request.user,
+            order_item__sheet_music=item,
+        ).exists()
+        if already_owns:
+            messages.warning(
+                request,
+                f'You already own "{item.title}". '
+                f'<a href="/account/downloads/" class="underline font-semibold">Go to Downloads</a>'
+            )
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
+
     cart = _get_cart(request)
 
     if str(item_id) not in cart:
