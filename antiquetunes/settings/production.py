@@ -19,3 +19,9 @@ CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# Required for HTTPS POST requests (Django 4.0+)
+CSRF_TRUSTED_ORIGINS = [
+    'https://antiquetunes.com',
+    'https://www.antiquetunes.com',
+]
