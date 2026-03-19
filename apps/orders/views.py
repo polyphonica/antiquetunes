@@ -118,7 +118,7 @@ def bundle_add(request):
     if cart_key not in cart:
         cart[cart_key] = {
             'type': 'bundle',
-            'id': bundle_id,
+            'bundle_id': bundle_id,
             'title': bundle.title,
             'price': str(bundle.price),
             'individual_total': str(bundle.individual_total),
@@ -162,7 +162,7 @@ def checkout_create(request):
     bundle_ids = []
     for key, data in cart.items():
         if data.get('type') == 'bundle':
-            bundle_ids.append(int(data['id']))
+            bundle_ids.append(int(data['bundle_id']))
         else:
             try:
                 sheet_music_ids.append(int(key))

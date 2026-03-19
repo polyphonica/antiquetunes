@@ -64,7 +64,7 @@
 
           {# Remove button #}
           {% if item.type == 'bundle' %}
-          <form method="post" action="{% url 'orders:bundle_remove' item.id %}">
+          <form method="post" action="{% url 'orders:bundle_remove' item.bundle_id %}">
             {% csrf_token %}
             <button type="submit"
                     class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
