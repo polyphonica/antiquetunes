@@ -16,6 +16,7 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
+            _merge_guest_orders(request, user, email)
             next_url = request.GET.get('next') or 'home'
             return redirect(next_url)
         messages.error(request, 'Invalid email or password.')
