@@ -1,7 +1,9 @@
 import os
+from decimal import Decimal
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
+from django.db.models import Sum
 from django.utils.text import slugify
 
 protected_storage = FileSystemStorage(
@@ -242,3 +244,55 @@ class SheetMusic(models.Model):
     @property
     def instrument_list(self):
         return ', '.join(self.instruments.values_list('name', flat=True))
+
+
+def bundle_cover_path(instance, filename):
+    ext = os.path.splitext(filename)[1]
+    return f'bundles/covers/{instance.slug}{ext}'
+
+
+class Bundle(models.Model):
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+    cover_image = models.ImageField(upload_to=bundle_cover_path, blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    items = models.ManyToManyField(SheetMusic, related_name='bundles', blank=True)
+    is_active = models.BooleanField(default=False)
+    featured = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('bundles:detail', kwargs={'slug': self.slug})
+
+    @property
+    def individual_total(self):
+        return self.items.aggregate(total=Sum('price'))['total'] or Decimal('0')
+
+    @property
+    def saving(self):
+        return self.individual_total - self.price
+
+    @property
+    def saving_percent(self):
+        individual = self.individual_total
+        if individual:
+            return int((self.saving / individual) * 100)
+        return 0
+
+    @property
+    def piece_count(self):
+        return self.items.count()

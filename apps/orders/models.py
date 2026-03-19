@@ -46,6 +46,10 @@ class OrderItem(models.Model):
     sheet_music = models.ForeignKey(
         'catalogue.SheetMusic', null=True, blank=True, on_delete=models.SET_NULL
     )
+    bundle = models.ForeignKey(
+        'catalogue.Bundle', null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='order_items',
+    )
     unit_price = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):

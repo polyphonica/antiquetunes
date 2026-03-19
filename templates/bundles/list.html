@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Sheet Music Bundles | AntiqueTunes{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <h1 class="font-display text-3xl text-mahogany mb-2">Sheet Music Bundles</h1>
+    <p class="text-gray-500 mb-10">Curated collections at a special price — buy more, save more.</p>
+
+    {% if bundles %}
+    <div class="space-y-6">
+      {% for bundle in bundles %}
+      <article class="bg-white border border-parchment rounded-xl overflow-hidden flex flex-col sm:flex-row">
+
+        {# Cover #}
+        <a href="{{ bundle.get_absolute_url }}" class="block sm:w-48 flex-shrink-0" tabindex="-1" aria-hidden="true">
+          {% if bundle.cover_image %}
+          <img src="{{ bundle.cover_image.url }}" alt="{{ bundle.title }} cover"
+               class="w-full h-48 sm:h-full object-cover" />
+          {% else %}
+          <div class="w-full h-48 sm:h-full bg-parchment/50 flex items-center justify-center">
+            <svg class="w-12 h-12 text-mahogany/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+          </div>
+          {% endif %}
+        </a>
+
+        {# Details #}
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <h2 class="font-display text-xl text-mahogany mb-1">
+              <a href="{{ bundle.get_absolute_url }}" class="hover:text-gold transition-colors">{{ bundle.title }}</a>
+            </h2>
+            <p class="text-sm text-gray-500 mb-3">{{ bundle.piece_count }} piece{{ bundle.piece_count|pluralize }}</p>
+            {% if bundle.description %}
+            <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ bundle.description }}</p>
+            {% endif %}
+          </div>
+
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <span class="font-display text-2xl text-mahogany">${{ bundle.price }}</span>
+              {% if bundle.saving > 0 %}
+              <span class="ml-2 text-sm text-gray-400 line-through">${{ bundle.individual_total }}</span>
+              <span class="ml-2 inline-block bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+                Save {{ bundle.saving_percent }}%
+              </span>
+              {% endif %}
+            </div>
+            <a href="{{ bundle.get_absolute_url }}"
+               class="bg-mahogany text-cream px-5 py-2 rounded font-semibold text-sm hover:bg-mahogany-light transition-colors">
+              View Bundle
+            </a>
+          </div>
+        </div>
+
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center py-20 text-gray-400">
+      <p class="font-display text-2xl text-mahogany mb-3">No bundles available yet</p>
+      <p class="mb-8">Check back soon — we're putting together some great collections.</p>
+      <a href="/catalogue/" class="inline-block bg-mahogany text-cream px-6 py-3 rounded-lg font-semibold hover:bg-mahogany-light transition-colors">
+        Browse Individual Pieces
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</main>
+{% endblock %}

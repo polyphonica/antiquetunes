@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from apps.catalogue.models import SheetMusic
+from apps.catalogue.models import Bundle, SheetMusic
 from .models import DownloadToken, Order, OrderItem
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -75,6 +75,7 @@ def cart_add(request):
     if str(item_id) not in cart:
         first_genre = item.genres.first()
         cart[str(item_id)] = {
+            'type': 'sheet_music',
             'title': item.title,
             'composer': item.composer,
             'price': str(item.price),
@@ -85,6 +86,59 @@ def cart_add(request):
         _save_cart(request, cart)
         messages.success(request, f'"{item.title}" added to your cart.')
 
+    return redirect('orders:cart')
+
+
+@require_POST
+def bundle_add(request):
+    bundle_id = request.POST.get('bundle_id', '').strip()
+    if not bundle_id:
+        return redirect('home')
+
+    bundle = get_object_or_404(Bundle, pk=bundle_id, is_active=True)
+    cart_key = f'bundle_{bundle_id}'
+
+    # Warn if user already owns some pieces in this bundle
+    if request.user.is_authenticated:
+        owned = DownloadToken.objects.filter(
+            customer=request.user,
+            order_item__sheet_music__in=bundle.items.all(),
+        ).select_related('order_item__sheet_music').distinct()
+        if owned.exists():
+            owned_titles = ', '.join(
+                t.order_item.sheet_music.title for t in owned if t.order_item.sheet_music
+            )
+            messages.warning(
+                request,
+                f'You already own some pieces in this bundle ({owned_titles}). '
+                f'You can still purchase it if you wish.'
+            )
+
+    cart = _get_cart(request)
+    if cart_key not in cart:
+        cart[cart_key] = {
+            'type': 'bundle',
+            'id': bundle_id,
+            'title': bundle.title,
+            'price': str(bundle.price),
+            'individual_total': str(bundle.individual_total),
+            'saving': str(bundle.saving),
+            'saving_percent': bundle.saving_percent,
+            'piece_count': bundle.piece_count,
+            'cover_url': bundle.cover_image.url if bundle.cover_image else None,
+            'slug': bundle.slug,
+        }
+        _save_cart(request, cart)
+        messages.success(request, f'"{bundle.title}" bundle added to your cart.')
+
+    return redirect('orders:cart')
+
+
+@require_POST
+def bundle_remove(request, bundle_id):
+    cart = _get_cart(request)
+    cart.pop(f'bundle_{bundle_id}', None)
+    _save_cart(request, cart)
     return redirect('orders:cart')
 
 
@@ -104,14 +158,24 @@ def checkout_create(request):
     if not cart:
         return redirect('orders:cart')
 
-    item_ids = [int(k) for k in cart.keys()]
-    db_items = list(SheetMusic.objects.filter(pk__in=item_ids, is_active=True))
+    sheet_music_ids = []
+    bundle_ids = []
+    for key, data in cart.items():
+        if data.get('type') == 'bundle':
+            bundle_ids.append(int(data['id']))
+        else:
+            try:
+                sheet_music_ids.append(int(key))
+            except ValueError:
+                pass
 
-    if not db_items:
+    db_items = list(SheetMusic.objects.filter(pk__in=sheet_music_ids, is_active=True)) if sheet_music_ids else []
+    db_bundles = list(Bundle.objects.filter(pk__in=bundle_ids, is_active=True).prefetch_related('items')) if bundle_ids else []
+
+    if not db_items and not db_bundles:
         return redirect('orders:cart')
 
-    # Create a pending order
-    subtotal = sum(i.price for i in db_items)
+    subtotal = sum(i.price for i in db_items) + sum(b.price for b in db_bundles)
     order = Order.objects.create(
         customer=request.user if request.user.is_authenticated else None,
         status=Order.Status.PENDING,
@@ -123,6 +187,10 @@ def checkout_create(request):
 
     for item in db_items:
         OrderItem.objects.create(order=order, sheet_music=item, unit_price=item.price)
+
+    for bundle in db_bundles:
+        for piece in bundle.items.filter(is_active=True):
+            OrderItem.objects.create(order=order, sheet_music=piece, bundle=bundle, unit_price=0)
 
     # Build Stripe line items from live DB prices
     line_items = []
@@ -136,6 +204,22 @@ def checkout_create(request):
                     'description': desc,
                 },
                 'unit_amount': int(item.price * 100),
+            },
+            'quantity': 1,
+        })
+    for bundle in db_bundles:
+        pieces = list(bundle.items.all()[:3])
+        sample = ', '.join(p.title for p in pieces)
+        if bundle.piece_count > 3:
+            sample += '…'
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': bundle.title,
+                    'description': f'{bundle.piece_count} pieces: {sample}',
+                },
+                'unit_amount': int(bundle.price * 100),
             },
             'quantity': 1,
         })

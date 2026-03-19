@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ bundle.title }} | AntiqueTunes{% endblock %}
+
+{% block content %}
+<main class="bg-cream min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    {# Breadcrumb #}
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+      <ol class="flex items-center gap-2">
+        <li><a href="/" class="hover:text-mahogany transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/bundles/" class="hover:text-mahogany transition-colors">Bundles</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="text-mahogany font-medium" aria-current="page">{{ bundle.title }}</li>
+      </ol>
+    </nav>
+
+    <div class="bg-white border border-parchment rounded-xl overflow-hidden">
+
+      {# Header #}
+      <div class="flex flex-col sm:flex-row">
+        {% if bundle.cover_image %}
+        <div class="sm:w-56 flex-shrink-0">
+          <img src="{{ bundle.cover_image.url }}" alt="{{ bundle.title }} cover"
+               class="w-full h-56 sm:h-full object-cover" />
+        </div>
+        {% endif %}
+
+        <div class="p-8 flex-1">
+          <h1 class="font-display text-3xl text-mahogany mb-2">{{ bundle.title }}</h1>
+          <p class="text-gray-500 mb-4">{{ bundle.piece_count }} piece{{ bundle.piece_count|pluralize }}</p>
+
+          {% if bundle.description %}
+          <p class="text-gray-600 mb-6">{{ bundle.description }}</p>
+          {% endif %}
+
+          {# Pricing #}
+          <div class="flex items-baseline gap-4 mb-6">
+            <span class="font-display text-4xl text-mahogany">${{ bundle.price }}</span>
+            {% if bundle.saving > 0 %}
+            <span class="text-gray-400 line-through text-lg">${{ bundle.individual_total }}</span>
+            <span class="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">
+              Save ${{ bundle.saving }} ({{ bundle.saving_percent }}% off)
+            </span>
+            {% endif %}
+          </div>
+
+          {# Add to cart #}
+          <form method="post" action="{% url 'orders:bundle_add' %}">
+            {% csrf_token %}
+            <input type="hidden" name="bundle_id" value="{{ bundle.id }}" />
+            <button type="submit"
+                    class="bg-mahogany text-cream px-8 py-3 rounded-lg font-semibold text-lg
+                           hover:bg-mahogany-light transition-colors focus:outline-none focus:ring-2 focus:ring-gold">
+              Add Bundle to Cart
+            </button>
+          </form>
+
+          <p class="text-xs text-gray-400 mt-3">Instant PDF download for every piece after purchase.</p>
+        </div>
+      </div>
+
+      {# Piece list #}
+      <div class="border-t border-parchment px-8 py-6">
+        <h2 class="font-display text-xl text-mahogany mb-4">What's included</h2>
+        <ul class="divide-y divide-parchment/50">
+          {% for piece in pieces %}
+          <li class="flex items-center gap-4 py-4">
+
+            {# Cover thumbnail #}
+            {% if piece.cover_image %}
+            <img src="{{ piece.cover_image.url }}" alt="{{ piece.title }} cover"
+                 class="w-12 h-12 object-cover rounded border border-parchment flex-shrink-0" />
+            {% else %}
+            <div class="w-12 h-12 bg-parchment/50 rounded flex-shrink-0 flex items-center justify-center">
+              <svg class="w-5 h-5 text-mahogany/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm12-3c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"/>
+              </svg>
+            </div>
+            {% endif %}
+
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-mahogany truncate">
+                <a href="{{ piece.get_absolute_url }}" class="hover:text-gold transition-colors">{{ piece.title }}</a>
+              </p>
+              <p class="text-sm text-gray-500">{{ piece.composer }}</p>
+            </div>
+
+            <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="text-sm text-gray-400">${{ piece.price }} individually</span>
+              {% if piece.pk in owned_piece_ids %}
+              <span class="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 px-2 py-1 rounded-full font-medium">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+                You own this
+              </span>
+              {% endif %}
+            </div>
+
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</main>
+{% endblock %}

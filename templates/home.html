@@ -109,6 +109,48 @@
 </section>
 {% endif %}
 
+{# ── Featured bundles ── #}
+{% if featured_bundles %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="bundles-heading">
+  <div class="flex items-baseline justify-between mb-8">
+    <h2 id="bundles-heading" class="font-display text-3xl text-mahogany">Bundle Deals</h2>
+    <a href="/bundles/" class="text-sm text-gold hover:text-gold-dark font-semibold"
+       aria-label="View all bundles">View all &rarr;</a>
+  </div>
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" role="list">
+    {% for bundle in featured_bundles %}
+    <li class="bg-white border border-parchment rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+      <a href="{{ bundle.get_absolute_url }}" class="block">
+        {% if bundle.cover_image %}
+        <img src="{{ bundle.cover_image.url }}" alt="{{ bundle.title }} cover"
+             class="w-full h-40 object-cover" />
+        {% else %}
+        <div class="w-full h-40 bg-parchment/50 flex items-center justify-center">
+          <svg class="w-10 h-10 text-mahogany/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+        {% endif %}
+        <div class="p-4">
+          <p class="font-display text-mahogany font-semibold mb-1 truncate">{{ bundle.title }}</p>
+          <p class="text-xs text-gray-500 mb-3">{{ bundle.piece_count }} piece{{ bundle.piece_count|pluralize }}</p>
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <span class="font-display text-lg text-mahogany">${{ bundle.price }}</span>
+            {% if bundle.saving > 0 %}
+            <span class="text-xs text-gray-400 line-through">${{ bundle.individual_total }}</span>
+            <span class="text-xs bg-green-100 text-green-800 font-semibold px-2 py-0.5 rounded-full">
+              Save {{ bundle.saving_percent }}%
+            </span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 {# ── Browse by instrument family ── #}
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" aria-labelledby="instruments-heading">
   <div class="flex items-baseline justify-between mb-8">

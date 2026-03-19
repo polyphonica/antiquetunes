@@ -18,7 +18,7 @@
 
           {# Cover thumbnail #}
           {% if item.cover_url %}
-          <a href="{% if item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
+          <a href="{% if item.type == 'bundle' %}/bundles/{{ item.slug }}/{% elif item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
              tabindex="-1" aria-hidden="true">
             <img src="{{ item.cover_url }}" alt="{{ item.title }} cover"
                  class="w-16 h-16 object-cover rounded-lg border border-parchment flex-shrink-0" />
@@ -31,24 +31,50 @@
           </div>
           {% endif %}
 
-          {# Title + composer #}
+          {# Title + meta #}
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-mahogany truncate">
-              <a href="{% if item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
+              <a href="{% if item.type == 'bundle' %}/bundles/{{ item.slug }}/{% elif item.genre_slug %}/catalogue/{{ item.genre_slug }}/{{ item.slug }}/{% else %}/catalogue/{% endif %}"
                  class="hover:text-gold transition-colors">
                 {{ item.title }}
               </a>
             </p>
+            {% if item.type == 'bundle' %}
+            <p class="text-sm text-gray-500">{{ item.piece_count }} piece{{ item.piece_count|pluralize }} — Bundle</p>
+            {% if item.saving_percent %}
+            <span class="text-xs bg-green-100 text-green-800 font-semibold px-2 py-0.5 rounded-full">
+              Save {{ item.saving_percent }}%
+            </span>
+            {% endif %}
+            {% else %}
             {% if item.composer %}
             <p class="text-sm text-gray-500">{{ item.composer }}</p>
             {% endif %}
             <p class="text-xs text-gray-400 mt-1">Digital PDF Download</p>
+            {% endif %}
           </div>
 
           {# Price #}
-          <p class="font-display text-lg text-mahogany flex-shrink-0">${{ item.price }}</p>
+          <div class="text-right flex-shrink-0">
+            <p class="font-display text-lg text-mahogany">${{ item.price }}</p>
+            {% if item.type == 'bundle' and item.individual_total %}
+            <p class="text-xs text-gray-400 line-through">${{ item.individual_total }}</p>
+            {% endif %}
+          </div>
 
           {# Remove button #}
+          {% if item.type == 'bundle' %}
+          <form method="post" action="{% url 'orders:bundle_remove' item.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
+                    aria-label="Remove {{ item.title }} bundle from cart">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </form>
+          {% else %}
           <form method="post" action="{% url 'orders:cart_remove' item.id %}">
             {% csrf_token %}
             <button type="submit"
@@ -59,6 +85,7 @@
               </svg>
             </button>
           </form>
+          {% endif %}
 
         </div>
         {% endfor %}

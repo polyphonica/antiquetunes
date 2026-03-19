@@ -32,6 +32,9 @@ urlpatterns = [
     # Catalogue
     path('catalogue/', include('apps.catalogue.urls', namespace='catalogue')),
 
+    # Bundles
+    path('bundles/', include('apps.catalogue.bundle_urls', namespace='bundles')),
+
     # Orders, cart, checkout, webhook
     path('', include('apps.orders.urls', namespace='orders')),
 

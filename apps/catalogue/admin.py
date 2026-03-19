@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Category, Genre, Instrument, SheetMusic
+from .models import Bundle, Category, Genre, Instrument, SheetMusic
 from .utils.pdf_processing import generate_cover_thumbnail, generate_watermarked_preview
 
 
@@ -91,6 +91,20 @@ class SheetMusicAdmin(admin.ModelAdmin):
             )
         return '—'
     cover_preview.short_description = 'Preview'
+
+@admin.register(Bundle)
+class BundleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'piece_count', 'is_active', 'featured')
+    list_filter = ('is_active', 'featured')
+    search_fields = ('title', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    filter_horizontal = ('items',)
+    readonly_fields = ('created_at', 'updated_at')
+
+    def piece_count(self, obj):
+        return obj.items.count()
+    piece_count.short_description = 'Pieces'
+
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)

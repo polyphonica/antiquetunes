@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 
-from .models import Genre, Category, Instrument, InstrumentFamily, SheetMusic
+from .models import Bundle, Genre, Category, Instrument, InstrumentFamily, SheetMusic
 
 
 DECADE_CHOICES = ['1900s', '1910s', '1920s', '1930s', '1940s']
@@ -59,10 +59,12 @@ def home(request):
     featured = SheetMusic.objects.filter(is_active=True, featured=True).prefetch_related('genres')[:6]
     recent = SheetMusic.objects.filter(is_active=True).order_by('-created_at')[:8]
     genres = Genre.objects.all()
+    featured_bundles = Bundle.objects.filter(is_active=True, featured=True).prefetch_related('items')[:4]
     return render(request, 'home.html', {
         'featured': featured,
         'recent': recent,
         'genres': genres,
+        'featured_bundles': featured_bundles,
         'decades': DECADE_CHOICES,
         'instrument_families': InstrumentFamily.choices,
         'seo_title': 'Rare Early 20th Century Sheet Music',
@@ -164,6 +166,38 @@ def sheet_music_detail(request, genre_slug, slug):
         'item': item,
         'related': related,
         'breadcrumb_genre': item.genres.first(),
+    })
+
+
+def bundle_list(request):
+    bundles = Bundle.objects.filter(is_active=True).prefetch_related('items')
+    return render(request, 'bundles/list.html', {
+        'bundles': bundles,
+        'seo_title': 'Sheet Music Bundles',
+        'seo_description': 'Save money with our curated sheet music bundles — buy more for less.',
+    })
+
+
+def bundle_detail(request, slug):
+    bundle = get_object_or_404(Bundle, slug=slug, is_active=True)
+    pieces = bundle.items.filter(is_active=True).prefetch_related('genres')
+
+    owned_piece_ids = set()
+    if request.user.is_authenticated:
+        from apps.orders.models import DownloadToken
+        owned_piece_ids = set(
+            DownloadToken.objects.filter(
+                customer=request.user,
+                order_item__sheet_music__in=pieces,
+            ).values_list('order_item__sheet_music_id', flat=True)
+        )
+
+    return render(request, 'bundles/detail.html', {
+        'bundle': bundle,
+        'pieces': pieces,
+        'owned_piece_ids': owned_piece_ids,
+        'seo_title': bundle.title,
+        'seo_description': bundle.description[:155] if bundle.description else f'{bundle.piece_count} pieces in one bundle.',
     })
 
 
