@@ -92,20 +92,6 @@ class SheetMusicAdmin(admin.ModelAdmin):
         return '—'
     cover_preview.short_description = 'Preview'
 
-@admin.register(Bundle)
-class BundleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'piece_count', 'is_active', 'featured')
-    list_filter = ('is_active', 'featured')
-    search_fields = ('title', 'description')
-    prepopulated_fields = {'slug': ('title',)}
-    filter_horizontal = ('items',)
-    readonly_fields = ('created_at', 'updated_at')
-
-    def piece_count(self, obj):
-        return obj.items.count()
-    piece_count.short_description = 'Pieces'
-
-
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         self._generate_previews(obj)
@@ -131,3 +117,17 @@ class BundleAdmin(admin.ModelAdmin):
             obj.preview_pdf.save(f'{obj.slug}-preview.pdf', watermarked, save=False)
 
         obj.save()
+
+
+@admin.register(Bundle)
+class BundleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'piece_count', 'is_active', 'featured')
+    list_filter = ('is_active', 'featured')
+    search_fields = ('title', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    filter_horizontal = ('items',)
+    readonly_fields = ('created_at', 'updated_at')
+
+    def piece_count(self, obj):
+        return obj.items.count()
+    piece_count.short_description = 'Pieces'
